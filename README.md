@@ -1,0 +1,2 @@
+# azure
+Scripts for Azure
