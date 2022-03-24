@@ -59,8 +59,16 @@ $vnet = Get-AzVirtualNetwork -Name $virtualNetworkName -ResourceGroupName $resou
 
 # Create Network Interface for the VM
 #$nic = New-AzNetworkInterface -Name ($targetVirtualMachineName.ToLower() + '_nic') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
-$nic = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_NIC') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
-$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nic.Id
+$nictrusted = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_trustedNIC') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id
+$nicuntrusted = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_untrustedNIC') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nictrusted.Id
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicuntrusted.Id
+
+# Create Network Security Group for the VM
+$NSGrule1 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
+$NSGrule2 = New-AzNetworkSecurityRuleConfig -Name web-rule -Description "Allow HTTPS" -Access Allow -Protocol Tcp -Direction Inbound -Priority 101 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 443
+$nsg = New-AzNetworkSecurityGroup -Name ($targetVirtualMachineName + '_NSG') -ResourceGroupName $resourceGroupName -Location $location -SecurityRules $NSGrule1,$NSGrule2
+$targetVirtualMachine = Add-AzNetworkSecurityGroup -VM $targetVirtualMachine -Id $nictrusted.Id
 
 #Create the virtual machine with Managed Disk attached
 New-AzVM -VM $targetVirtualMachine -ResourceGroupName $resourceGroupName -Location $location
