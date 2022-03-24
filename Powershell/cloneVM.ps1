@@ -68,7 +68,10 @@ $targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $
 $NSGrule1 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
 $NSGrule2 = New-AzNetworkSecurityRuleConfig -Name web-rule -Description "Allow HTTPS" -Access Allow -Protocol Tcp -Direction Inbound -Priority 101 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 443
 $nsg = New-AzNetworkSecurityGroup -Name ($targetVirtualMachineName + '_NSG') -ResourceGroupName $resourceGroupName -Location $location -SecurityRules $NSGrule1,$NSGrule2
-$targetVirtualMachine = Add-AzNetworkSecurityGroup -VM $targetVirtualMachine -Id $nictrusted.Id
+
+#https://docs.microsoft.com/de-de/azure/virtual-machines/windows/multiple-nics?toc=/azure/virtual-network/toc.json
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nictrusted.Id -Primary
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicuntrusted.Id
 
 #Create the virtual machine with Managed Disk attached
 New-AzVM -VM $targetVirtualMachine -ResourceGroupName $resourceGroupName -Location $location
