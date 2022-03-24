@@ -1,6 +1,6 @@
-# Azure
-Scripts for Azure von Eike Jan Doose
+# Azure scripting
+Scripts for Azure stuff / Eike Jan Doose - Starke-DMS®
 
-Danke an alle, die mir geholfen haben!
+Thanks to everybody who helped me.
 
-letzter Stand 24.03.2022
+Last update 24. March 2022
