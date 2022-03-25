@@ -3,4 +3,4 @@
 # The file "setup.reg" definds which component will be installed. Change this file if neccessary.
 #
 # Use this PowerShell commands to start the installation.
-# curl.exe "https://github.com/E-J-D/sdms-cloud1-azure/blob/ace2be38348ed804329a3501c2b6c6e9c8b4844a/Powershell/Install-Starke-DMS.ps1" 
+# curl.exe "https://github.com/E-J-D/sdms-cloud1-azure/blob/ace2be38348ed804329a3501c2b6c6e9c8b4844a/Powershell/Install-Starke-DMS.ps1" --output Install-Starke-DMS.ps1

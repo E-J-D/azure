@@ -1,5 +1,7 @@
 # 23.03.2022 Eike Doose
 # https://dejanstojanovic.net/powershell/2019/september/cloning-windows-virtual-machine-in-azure-without-having-to-stop-it
+# curl "https://github.com/E-J-D/sdms-cloud1-azure/blob/5fc856f5ce63a6a54f464b1ecdac41546e55ff61/Powershell/cloneVM.ps1" --output cloneVM.ps1
+
 
 #Existing virtual network where new virtual machine will be created
 
