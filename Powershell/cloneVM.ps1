@@ -13,7 +13,7 @@ $location = 'germanywestcentral'
 
 #Names of source and target (new) VMs
 $sourceVirtualMachineName = 'SDMS-Cloud1-01-DE-21-KD_TEMPLATE'
-$targetVirtualMachineName = 'SDMS-Cloud1-01-DE-40-KD50999'
+$targetVirtualMachineName = 'SDMS-Cloud1-01-DE-40-KD50aaa'
 
 #Name of snapshot which will be created from the Managed Disk
 $snapshotName = $sourceVirtualMachineName + '_OsDisk-snapshot'
@@ -59,19 +59,19 @@ $vnet = Get-AzVirtualNetwork -Name $virtualNetworkName -ResourceGroupName $resou
 
 # Create Network Interface for the VM
 #$nic = New-AzNetworkInterface -Name ($targetVirtualMachineName.ToLower() + '_nic') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
-$nictrusted = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_trustedNIC') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id
-$nicuntrusted = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_untrustedNIC') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
-$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nictrusted.Id
+$nicsql = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_NIC-SQL') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id
+$nicuntrusted = New-AzNetworkInterface -Name ($targetVirtualMachineName + '_NIC-untrusted') -ResourceGroupName $resourceGroupName -Location $location -SubnetId $vnet.Subnets[0].Id -PublicIpAddressId $publicIp.Id
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicsql.Id
 $targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicuntrusted.Id
 
 # Create Network Security Group for the VM
-$NSGrule1 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
-$NSGrule2 = New-AzNetworkSecurityRuleConfig -Name web-rule -Description "Allow HTTPS" -Access Allow -Protocol Tcp -Direction Inbound -Priority 101 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 443
-$nsg = New-AzNetworkSecurityGroup -Name ($targetVirtualMachineName + '_NSG') -ResourceGroupName $resourceGroupName -Location $location -SecurityRules $NSGrule1,$NSGrule2
+#$NSGrule1 = New-AzNetworkSecurityRuleConfig -Name rdp-rule -Description "Allow RDP" -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
+#$NSGrule2 = New-AzNetworkSecurityRuleConfig -Name web-rule -Description "Allow HTTPS" -Access Allow -Protocol Tcp -Direction Inbound -Priority 101 -SourceAddressPrefix Internet -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 443
+#$nsg = New-AzNetworkSecurityGroup -Name ($targetVirtualMachineName + '_NSG') -ResourceGroupName $resourceGroupName -Location $location -SecurityRules $NSGrule1,$NSGrule2
 
 #https://docs.microsoft.com/de-de/azure/virtual-machines/windows/multiple-nics?toc=/azure/virtual-network/toc.json
-$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nictrusted.Id -Primary
-$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicuntrusted.Id
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicsql.Id 
+$targetVirtualMachine = Add-AzVMNetworkInterface -VM $targetVirtualMachine -Id $nicuntrusted.Id -Primary
 
 #Create the virtual machine with Managed Disk attached
 New-AzVM -VM $targetVirtualMachine -ResourceGroupName $resourceGroupName -Location $location
