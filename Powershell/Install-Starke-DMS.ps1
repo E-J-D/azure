@@ -1,3 +1,5 @@
+# 28.03.2022 Eike Doose / licenced commerical use only - do not distribute
+# ========================================================================
 New-Item -Name "install\StarkeDMS-latest" -ItemType Directory -Path "C:\"
 curl.exe "ftp://get--it:get--IT2022@ftp.starke-dms.cloud/StarkeDMSlatest.zip" --output C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
 Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\StarkeDMSlatest.zip -DestinationPath C:\install\StarkeDMS-latest
