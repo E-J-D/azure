@@ -1,0 +1,131 @@
+﻿Windows Registry Editor Version 5.00
+
+; 31.03.2022 Eike Doose
+; SDMS Cloud .REG Template Cloud1 Master1
+
+; bisherigen Schlüssel löschen
+;[-HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\StarkeDMS\setup]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\StarkeDMS\setup]
+"MementoSectionUsed"=""
+
+
+; Client Components
+; ====================================
+
+; Administration
+"MementoSection_SEC03"=dword:00000001
+
+; DropZone
+"MementoSection_SEC29"=dword:00000001
+
+; Interface
+"MementoSection_SEC28"=dword:00000001
+
+; Office-AddIn
+"MementoSection_SEC12"=dword:00000001
+
+; Outlook-AddIn
+"MementoSection_SEC19"=dword:00000001
+
+; Scan
+"MementoSection_SEC09"=dword:00000001
+
+; Send-to
+"MementoSection_SEC31"=dword:00000001
+
+; Viewer
+"MementoSection_SEC08"=dword:00000001
+
+; Wartungsdienst / maintenance service
+"MementoSection_SEC34"=dword:00000000
+
+
+; Server Components
+; =================
+
+; DMS-Server
+"MementoSection_SEC07"=dword:00000001
+
+; File-Export
+"MementoSection_SEC20"=dword:00000001
+
+: File-Import
+"MementoSection_SEC05"=dword:00000001
+
+; IndexAgent
+"MementoSection_SEC06"=dword:00000001
+
+; LookupImport
+"MementoSection_SEC16"=dword:00000001
+
+; MailImport
+"MementoSection_SEC04"=dword:00000001
+
+; Mobile Viewer
+"MementoSection_SEC15"=dword:00000001
+
+; PDF-Druckarchivierung / PDF-Print2Archive
+"MementoSection_SEC10"=dword:00000001
+
+; PDF-Converter
+"MementoSection_SEC30"=dword:00000001
+
+; Proxy
+"MementoSection_SEC22"=dword:00000001
+
+; Server-OCR
+"MementoSection_SEC17"=dword:00000000
+
+; Server-Recognition
+"MementoSection_SEC26"=dword:00000001
+
+; SmartMail
+"MementoSection_SEC23"=dword:00000001
+
+; WebViewer
+"MementoSection_SEC21"=dword:00000001
+
+
+
+; Software interfaces / Schnittstellen
+; ====================================
+
+; Diamant
+"MementoSection_SEC24"=dword:00000000
+
+; Dynamics
+"MementoSection_SEC35"=dword:00000000
+
+; SAP
+"MementoSection_SEC27"=dword:00000000
+
+; SBS Rewe
+"MementoSection_SEC18"=dword:00000000
+
+; SBSWawi
+"MementoSection_SEC32"=dword:00000000
+
+; Tobit Mail
+"MementoSection_SEC33"=dword:00000000
+
+
+; undefined
+; ==================================
+
+"MementoSection_SEC42"=dword:00000001
+
+"MementoSection_SEC36"=dword:00000001
+
+"MementoSection_SEC37"=dword:00000001
+
+"MementoSection_SEC38"=dword:00000001
+
+"MementoSection_SEC39"=dword:00000001
+
+"MementoSection_SEC41"=dword:00000000
+
+"MementoSection_SEC40"=dword:00000000
+
+
+; Für die Umgebungsvariable DMSDIR gibt es keinen Schalter, sie wird immer gesetzt.
