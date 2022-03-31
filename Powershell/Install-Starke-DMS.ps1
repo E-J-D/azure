@@ -1,7 +1,7 @@
 # 28.03.2022 Eike Doose / licenced commerical use only - do not distribute
 # ========================================================================
 New-Item -Name "install\StarkeDMS-latest" -ItemType Directory -Path "C:\"
-curl.exe "ftp://get--it:get--IT2022@ftp.starke-dms.cloud/StarkeDMSlatest.zip" --output C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
+curl.exe "ftp://get--it:get--IT2022@ftp.get--it.de/StarkeDMSlatest.zip" --output C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
 Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\StarkeDMSlatest.zip -DestinationPath C:\install\StarkeDMS-latest
 Remove-Item C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-Starke-DMS_setup.reg" --output C:\install\StarkeDMS-latest\setup.reg
