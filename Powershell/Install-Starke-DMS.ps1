@@ -38,10 +38,20 @@ reg import C:\install\StarkeDMS-latest\ABBYY-setup.reg /reg:64
 Get-ChildItem -Path C:\install\StarkeDMS-latest\* -Include StarkeDMS*.exe | Rename-Item -NewName StarkeDMS-latest.exe
 Get-ChildItem -Path C:\install\StarkeDMS-latest\* -Include ABBYY*.exe | Rename-Item -NewName ABBYY-latest.exe
 
-# run the installer in silend mode
+# run the Starke-DMS® installer in silend mode
 C:\install\StarkeDMS-latest\StarkeDMS-latest.exe /S
 
 # wait for the Starke-DMS® installer to be finished
 Wait-Process -Name Starke*
 Start-Sleep -s 10
+
+# run the ABBYY installer in silend mode
 C:\install\StarkeDMS-latest\ABBYY-latest.exe /S
+Wait-Process -Name ABBYY*
+Start-Sleep -s 5
+
+# message when everything is done
+echo ################################################
+echo #############  Everything done  ################
+echo ######  Thank you for using Starke-DMS®  #######
+echo ################################################
