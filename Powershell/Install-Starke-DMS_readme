@@ -1,6 +1,6 @@
 # 24.03.2022 Eike Doose
 # AutoInstaller for Starke-DMS®
-# The file "setup.reg" definds which component will be installed. Change this file if neccessary.
+# The file "Install-Starke-DMS_setup" definds component to be installed. Change this file if neccessary.
 #
 # Use this PowerShell commands to start the installation.
 # curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-Starke-DMS.ps1" --output Install-Starke-DMS.ps1
