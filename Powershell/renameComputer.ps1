@@ -1,3 +1,4 @@
+# 31.03.2022 Eike Doose
 # https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=3
 
 Rename-Computer -NewName NewNAME -Force -PassThru
