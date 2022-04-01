@@ -1,5 +1,5 @@
-# 31.03.2022 Eike Doose / licenced commerical use only - do not distribute
-# ========================================================================
+# 31.03.2022 Eike Doose / licenced for commerical use only - do not distribute
+# ============================================================================
 #
 # uninstall Starke-DMS® silent
 # "c:\program files (x86)\StarkeDMS\uninst.exe" /S
