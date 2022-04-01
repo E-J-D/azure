@@ -1,4 +1,4 @@
-# 31.03.2022 Eike Doose / licenced for commerical use only - do not distribute
+# 01.04.2022 Eike Doose / licenced for commerical use only - do not distribute
 # ============================================================================
 #
 # uninstall Starke-DMS® silent
