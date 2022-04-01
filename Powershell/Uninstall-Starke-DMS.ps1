@@ -10,15 +10,15 @@ pause
 # uninstall ABBYY silent
 Start-Process -Wait -FilePath 'C:\Program Files (x86)\StarkeDMS\uninstabbyy.exe' -ArgumentList /S -PassThru
 
-# wait for the Starke-DMSÂ® uninstaller to be finished
+# wait for the Starke-DMS® uninstaller to be finished
 Wait-Process -Name uninstabbyy*
 Start-Sleep -s 10
 
-# uninstall Starke-DMSÂ® silent
+# uninstall Starke-DMS® silent
 Start-Process -Wait -FilePath 'C:\Program Files (x86)\StarkeDMS\uninst.exe' -ArgumentList /S -PassThru
 
-# wait for the Starke-DMSÂ® uninstaller to be finished
-Wait-Process -Name un*
+# wait for the Starke-DMS® uninstaller to be finished
+Wait-Process -Name uninst*
 Start-Sleep -s 10
 
 # message when everything is done
