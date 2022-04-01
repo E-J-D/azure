@@ -2,5 +2,6 @@
 # AutoInstaller for Starke-DMS®
 # The file "Install-Starke-DMS_setup" definds component to be installed. Change this file if neccessary.
 #
-# Use this PowerShell commands to start the installation.
-# curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Uninstall-Starke-DMS.ps1" --output c:\install\Uninstall-Starke-DMS.ps1 --create-dirs
+Use this PowerShell commands to start the installation.
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Uninstall-Starke-DMS.ps1" --output c:\install\Uninstall-Starke-DMS.ps1 --create-dirs
+cd c:\install
