@@ -8,13 +8,13 @@
 # "C:\Program Files (x86)\StarkeDMS\uninstabbyy.exe" /S
 
 # create folder .\install\StarkeDMS-latest
-New-Item -Name "install\StarkeDMS-latest" -ItemType Directory -Path "C:\"
+# New-Item -Name "install\StarkeDMS-latest" -ItemType Directory -Path "C:\"
 
 # download the latest Starke-DMS® installer
-curl.exe "ftp://get--it:get--IT2022@ftp.get--it.de/StarkeDMSlatest.zip" --output C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
+curl.exe "ftp://get--it:get--IT2022@ftp.get--it.de/StarkeDMSlatest.zip" --output C:\install\StarkeDMS-latest\StarkeDMSlatest.zip --create-dirs
 
 # download the latest ABBYY installer
-curl.exe "ftp://get--it:get--IT2022@ftp.get--it.de/ABBYYlatest.zip" --output C:\install\StarkeDMS-latest\ABBYYlatest.zip
+curl.exe "ftp://get--it:get--IT2022@ftp.get--it.de/ABBYYlatest.zip" --output C:\install\StarkeDMS-latest\ABBYYlatest.zip --create-dirs
 
 # expand the Starke-DMS® ZIP
 Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\StarkeDMSlatest.zip -DestinationPath C:\install\StarkeDMS-latest
@@ -27,8 +27,8 @@ Remove-Item C:\install\StarkeDMS-latest\StarkeDMSlatest.zip
 Remove-Item C:\install\StarkeDMS-latest\ABBYYlatest.zip
 
 # download predefined installer registry keys
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-Starke-DMS_setup.reg" --output C:\install\StarkeDMS-latest\StarkeDMS-setup.reg
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-ABBYY_setup.reg" --output C:\install\StarkeDMS-latest\ABBYY-setup.reg
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-Starke-DMS_setup.reg" --output C:\install\StarkeDMS-latest\StarkeDMS-setup.reg --create-dirs
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-ABBYY_setup.reg" --output C:\install\StarkeDMS-latest\ABBYY-setup.reg --create-dirs
 
 # import predefined installer registry keys
 reg import C:\install\StarkeDMS-latest\StarkeDMS-setup.reg /reg:64
