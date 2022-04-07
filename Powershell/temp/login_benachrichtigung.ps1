@@ -1,0 +1,1 @@
+Send-MailMessage -From 'dms@kanu-club-fulda.de' -To 'eike@doose.email' -Body 'Attention, Login by Administrator!' -Subject 'Admin-Login on Server KCF-DMS'  -SmtpServer 'smtp.strato.de' -Port 587 -Credential $(New-Object System.Management.Automation.PSCredential ('dms@kanu-club-fulda.de', $(ConvertTo-SecureString 'V53J!%H@=84r' -AsPlainText -Force))) -UseSsl

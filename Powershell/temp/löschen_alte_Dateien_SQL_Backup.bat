@@ -1,0 +1,1 @@
+forfiles /p "D:\_DMSDaten\Backup" /m *.bak /d -14 /c "cmd /c del @path"

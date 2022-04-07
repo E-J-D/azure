@@ -1,0 +1,2 @@
+$me = Get-WinEvent -LogName Microsoft-Windows-TerminalServices-LocalSessionManager/Operational | Where {$_.Id -eq "25"}| select -ExpandProperty Message -First 1
+Send-MailMessage -From 'dms@kanu-club-fulda.de' -To 'eike@doose.email' -Body "Reconnect mit Server durch Benutzer: $me " -Subject 'Reconnect event on Server'  -SmtpServer 'smtp.strato.de' -Port 587 -Credential $(New-Object System.Management.Automation.PSCredential ('dms@kanu-club-fulda.de', $(ConvertTo-SecureString 'V53J!%H@=84r' -AsPlainText -Force))) -UseSsl
