@@ -1,6 +1,7 @@
 ﻿# 07.04.2022 Boris Brixel
-# .\dms-license-dbupdate.ps1 -sqlserver dbserver.starke.intern -database 'DMSDB' -username 'sa' -password 'geheim' -configpath 'C:\entwicklung\DMSDEV\Exe\config50999_3'
-# .\Install-Starke-DMS_DB.ps1 -sqlserver localhost -database 'CLOUD1MASTER1' -username 'sa' -password 'Admin00!' -configpath 'd:\dms-config'
+#### .\dms-license-dbupdate.ps1 -sqlserver dbserver.starke.intern -database 'DMSDB' -username 'sa' -password 'geheim' -configpath 'C:\entwicklung\DMSDEV\Exe\config50999_3'
+# C:\install\Install-Starke-DMS_DB2fixLic.ps1 -sqlserver localhost\SDMSCLOUD1 -database $customerno -username 'sa' -password $saPass -configpath $LIZtargetdir
+
 param (
 	[Parameter(Mandatory=$true)][string]$sqlserver,
 	[Parameter(Mandatory=$true)][string]$database,
