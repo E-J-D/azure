@@ -1,7 +1,7 @@
 # 30.03.2022 Eike Doose eike.doose@starke.de
 
 # Use the following command to download this file
-# curl.exe https://raw.githubusercontent.com/E-J-D/sdms-cloud1-azure/main/Powershell/Install-EDGE.ps1 --output Install-EDGE.ps1
+# curl.exe https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-EDGE.ps1 --output Install-EDGE.ps1
 
 # Autoinstall Microsoft Edge
 md -Path $env:temp\edgeinstall -erroraction SilentlyContinue | Out-Null
