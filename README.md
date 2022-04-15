@@ -7,5 +7,8 @@ https://silentinstallhq.com/
 
 https://docs.microsoft.com/
 
+https://www.powershellgallery.com/
+
+
 
 Last update 11. April 2022
