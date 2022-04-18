@@ -14,7 +14,7 @@ param (
 #Invoke-SqlCmd -ServerInstance $sqlserver -Database $database -Query $sqlquery -Username "$username" -Password "$password" -Verbose
 
 $sqlquery = 'SELECT name FROM ArchivPlus.versions WHERE description LIKE ""Datenbank Kundenindividuelle Struktur"";'
-$olduid = SQLCMD.EXE -S "$sqlserver" -d "$database" -Q "$sqlquery" -U "$username" -P "$password" -h -1
+$olduid = .\SQLCMD.EXE -S "$sqlserver" -d "$database" -Q "$sqlquery" -U "$username" -P "$password" -h -1
 $olduid = ($olduid -split '\r\n')[0]
 $olduid = $olduid.Trim()
 if ($olduid -match '\{.+\}') {
@@ -28,7 +28,7 @@ if ($olduid -match '\{.+\}') {
 		Write-Host Neue UID: $newuid
 		$sqlupdate = "UPDATE ArchivPlus.versions SET name = """"db$newuid"""" WHERE name = """"db$olduid"""";"
 		#Write-Host $sqlupdate
-		$updateresult = SQLCMD.EXE -S "$sqlserver" -d "$database" -Q "$sqlupdate" -U "$username" -P "$password" -h -1
+		$updateresult = .\SQLCMD.EXE -S "$sqlserver" -d "$database" -Q "$sqlupdate" -U "$username" -P "$password" -h -1
 		$updateresult = $updateresult.Trim()
 		Write-Host $updateresult
 	} else {
