@@ -10,7 +10,7 @@ $SQLInstance = "localhost\SDMSCLOUD1"
 #                    -verbose
 
 $DBName = "50999"
-$Backupfile = "C:\install\SQL-DB-CLOUD1MASTER1.bak"
+$Backupfile = "C:\install\StarkeDMS-latest\SQL-DB-CLOUD1MASTER1.bak"
 #Restore-SqlDatabase  -ServerInstance $SQLInstance -Database "$DbNAme" -BackupFile "$Backupfile" -verbose -AutoRelocateFile
 
 Restore-SqlDatabase -ServerInstance $SQLInstance `
