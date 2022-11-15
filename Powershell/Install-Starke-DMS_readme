@@ -11,6 +11,9 @@ curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/In
 Start-Sleep -s 2
 
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02.ps1" --output c:\install\Install-Starke-DMS_02.ps1 --create-dirs
+Start-Sleep -s 1
+
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_03.ps1" --output c:\install\Install-Starke-DMS_03.ps1 --create-dirs
 
 cd c:\install
 
