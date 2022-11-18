@@ -16,6 +16,7 @@ Start-Sleep -s 1
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_03.ps1" --output c:\install\Install-Starke-DMS_03.ps1 --create-dirs
 
 cd c:\install
+dir
 
 # NFR environment
 # .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.120.11' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '56999'  
