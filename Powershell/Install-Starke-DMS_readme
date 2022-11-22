@@ -1,4 +1,4 @@
-# 15.11.2022 Eike Doose
+# 22.11.2022 Eike Doose
 # AutoInstaller for Starke-DMS®
 # The files "Install-Starke-DMS*" does the silent install. Change this file if neccessary.
 #
@@ -26,4 +26,4 @@ dir
 # .\Install-Starke-DMS_01.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999'
 
 # VMware lokal test environment (22.11.2022)
-# .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '57999'
+# .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
