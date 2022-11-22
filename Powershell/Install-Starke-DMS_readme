@@ -15,6 +15,10 @@ Start-Sleep -s 1
 
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_03.ps1" --output c:\install\Install-Starke-DMS_03.ps1 --create-dirs
 
+## TEST ONLY
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02 - OFFICE.ps1" --output c:\install\Install-Starke-DMS_02 - OFFICE.ps1 --create-dirs
+## TEST ONLY END
+
 cd c:\install
 dir
 
@@ -30,6 +34,7 @@ dir
 
 # VMware lokal test environment (22.11.2022)
 # .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
+# .\Install-Starke-DMS_02 - OFFICE.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
 #####################################
 
 #####################################
