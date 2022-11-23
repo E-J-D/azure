@@ -46,6 +46,7 @@ dir
 # PRODUCTIVE environment (15.11.2022)
 # --------------------------------------------
 # 
+# .\Install-Starke-DMS_02-OFFICE.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999' -LIZuser 'dockersetup' -LIZpass 'S3VyendlaWwgUmV2aXZhbCBiZXdlaXNlbiE' -LIZserver 'https://starke-dms-license.azurewebsites.net' -LIZuid '{7666BBC5-7C53-4B17-9444-1CB0B707AF5C}' -LIZtargetdir 'd:\dms-config' -saPass 'saAdmin00!' 
 #
 # --------------------------------------------
 # VMware lokal test environment (22.11.2022)
