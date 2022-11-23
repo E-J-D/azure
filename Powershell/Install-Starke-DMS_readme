@@ -16,13 +16,13 @@ Start-Sleep -s 1
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_03.ps1" --output c:\install\Install-Starke-DMS_03.ps1 --create-dirs
 
 ## TEST ONLY
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02-OFFICE.ps1" --output "c:\install\Install-Starke-DMS_02-OFFICE.ps1" --create-dirs
+# curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02-OFFICE.ps1" --output "c:\install\Install-Starke-DMS_02-OFFICE.ps1" --create-dirs
 ## TEST ONLY END
 
 cd c:\install
 dir
 
-
+#####################################
 #####################################
 ## .\Install-Starke-DMS_01.ps1 ##
 # NFR environment
@@ -36,6 +36,8 @@ dir
 # .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
 #####################################
 
+
+#####################################
 #####################################
 ## .\Install-Starke-DMS_02.ps1 ##
 # NFR environment
@@ -45,7 +47,7 @@ dir
 # --------------------------------------------
 # PRODUCTIVE environment (15.11.2022)
 # --------------------------------------------
-# 
+# .\Install-Starke-DMS_02.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999' -LIZuser 'dockersetup' -LIZpass 'S3VyendlaWwgUmV2aXZhbCBiZXdlaXNlbiE' -LIZserver 'https://starke-dms-license.azurewebsites.net' -LIZuid '{7666BBC5-7C53-4B17-9444-1CB0B707AF5C}' -LIZtargetdir 'd:\dms-config' -saPass 'saAdmin00!' 
 # .\Install-Starke-DMS_02-OFFICE.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999' -LIZuser 'dockersetup' -LIZpass 'S3VyendlaWwgUmV2aXZhbCBiZXdlaXNlbiE' -LIZserver 'https://starke-dms-license.azurewebsites.net' -LIZuid '{7666BBC5-7C53-4B17-9444-1CB0B707AF5C}' -LIZtargetdir 'd:\dms-config' -saPass 'saAdmin00!' 
 #
 # --------------------------------------------
