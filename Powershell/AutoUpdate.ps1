@@ -10,7 +10,11 @@ Write-Host -ForegroundColor Yellow "# Install PSWindowsUpdate modul for PowerShe
 Write-Host -ForegroundColor Yellow "################################################"
 Write-Host
 # pause
+
 Install-Module -Name PSWindowsUpdate -Force
+Start-Sleep -s 2
+get-command -module PSWindowsUpdate
+Start-Sleep -s 2
 
 # Install all pending Updates and restart without asking
 Write-Host 
