@@ -31,12 +31,12 @@ param (
 	[string]$FTPserver = 'ftp.get--it.de',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
 	[Parameter(Mandatory=$true)][string]$FTPpass,
-	[Parameter(Mandatory=$true)][string]$customerno
+	[Parameter(Mandatory=$true)][string]$customerno,
 
 	[string]$POWERSHELL7 = 'yes',
 	[string]$FTP = 'yes',
 	[string]$UPDATE = 'no',
-	[string]$ADMINUPDATE = 'yes',
+	[string]$ADMINUPDATE = 'yes'
 )
 
 
@@ -250,6 +250,9 @@ curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Co
 # download the Notepad++ installer
 curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/npp.8.4.7.Installer.x64.exe" --ssl-reqd -k --output C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64.exe --create-dirs
 
+# download the Micrsoft Edge installer
+curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/MicrosoftEdgeEnterpriseX64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi --create-dirs
+
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "######################################"
@@ -290,9 +293,9 @@ if($POWERSHELL7 -eq "yes"){
 
 Write-Host
 Write-Host 
-Write-Host -ForegroundColor Yellow "########################"
-Write-Host -ForegroundColor Yellow "### create shortcuts ###"
-Write-Host -ForegroundColor Yellow "########################"
+Write-Host -ForegroundColor Yellow "##################################"
+Write-Host -ForegroundColor Yellow "### creating desktop shortcuts ###"
+Write-Host -ForegroundColor Yellow "##################################"
 Write-Host
 Write-Host
 
@@ -335,14 +338,20 @@ $objShortCut.Save()
 ## Powershell 7 Modul sqlserver install
 ## necessary for sqlcmd cmdlet
 ################################################
-
+Write-Host
+Write-Host 
+Write-Host -ForegroundColor Yellow "#######################################"
+Write-Host -ForegroundColor Yellow "###     installing Powershell 7     ###"
+Write-Host -ForegroundColor Yellow "#######################################"
+Write-Host
+Write-Host
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name SqlServer -force
 
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "########################################"
-Write-Host -ForegroundColor Green "### installing PowerShell 7 finished ###"
+Write-Host -ForegroundColor Green "###      PowerShell 7 installed      ###"
 Write-Host -ForegroundColor Green "########################################"
 Write-Host
 Write-Host
@@ -367,7 +376,13 @@ Write-Host
 ################################################
 ## install Notepad++ in silent mode
 ################################################
-Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64' -ArgumentList /S -PassThru
+Write-Host
+Write-Host 
+Write-Host -ForegroundColor Yellow "####################################"
+Write-Host -ForegroundColor Yellow "###     installing Notepad++     ###"
+Write-Host -ForegroundColor Yellow "####################################"
+Write-Host
+Write-HostStart-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64' -ArgumentList /S -PassThru
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "#######################################"
@@ -380,14 +395,14 @@ Write-Host
 ################################################
 ## install Microsoft Edge in silent mode
 ################################################
-#md -Path $env:temp\edgeinstall -erroraction SilentlyContinue | Out-Null
-#$Download = join-path $env:temp\edgeinstall MicrosoftEdgeEnterpriseX64.msi
-#Invoke-WebRequest 'https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/a2662b5b-97d0-4312-8946-598355851b3b/MicrosoftEdgeEnterpriseX64.msi'  -OutFile $Download
-# Start-Process "$Download" -ArgumentList "/quiet"
+Write-Host
+Write-Host 
+Write-Host -ForegroundColor Yellow "####################################"
+Write-Host -ForegroundColor Yellow "###  installing Microsoft Edge   ###"
+Write-Host -ForegroundColor Yellow "####################################"
+Write-Host
+Write-Host
 
-# 10.11.2022 changed to download existing MSI package // https://msedge.sf.dl.... does not work anymore
-# download the Microsoft Edge installer
-curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/MicrosoftEdgeEnterpriseX64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi --create-dirs
 Start-Process -wait -FilePath C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi -ArgumentList "/quiet"
 Write-Host
 Write-Host
@@ -435,13 +450,23 @@ New-Item -Path "d:\dms-data" -Name "ftp-data" -ItemType "directory"
 New-Item -Path "d:\dms-data\backup" -Name "sql" -ItemType "directory"
 New-Item -Path "d:\" -Name "tools" -ItemType "directory"
 New-Item -Path "d:\tools" -Name "ansible" -ItemType "directory"
-
+Write-Host
+Write-Host
+Write-Host -ForegroundColor Green "#########################################"
+Write-Host -ForegroundColor Green "###       media structur created      ###"
+Write-Host -ForegroundColor Green "#########################################"
+Write-Host
+Write-Host
 
 ################################################
 ## install FTP server
 ################################################
 
 if($FTP -eq "yes"){
+	Write-Host -ForegroundColor yellow "##########################################"
+	Write-Host -ForegroundColor yellow "########  installing FTP server  #########"
+	Write-Host -ForegroundColor yellow "##########################################"
+
 	Install-WindowsFeature Web-Ftp-Server -IncludeAllSubFeature -IncludeManagementTools
 	Install-Module -Name IISAdministration -force
 
@@ -504,6 +529,48 @@ if($FTP -eq "yes"){
 
 	Remove-Item C:\inetpub\ -recurse
 
+	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
+	# Font Ivrit
+	'-------------------------------------------------------------------', `
+	'  ____  _             _              ____  __  __ ____             ', `
+	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
+	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
+	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
+	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
+	'   ____ _                 _   ___           _        _ _           ', `
+	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
+	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
+	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
+	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
+	'                                                                   ', `
+	'-------------------------------------------------------------------', `
+	'New FTP name and password', `
+	'-------------------------------------------------------------------', `
+	'Host: '+$ENV:COMPUTERNAME, `
+	'-------------------------------------------------------------------', `
+	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
+	'-------------------------------------------------------------------', `
+	'new ftp user:', `
+	$FTPuserName, `
+	'-------------------------------------------------------------------', `
+	'new password:', `
+	$ftppassword, `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------', `
+	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------'  | `
+	out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
+
+
+	Write-Host
+	Write-Host
+	Write-Host -ForegroundColor Green "###########################################"
+	Write-Host -ForegroundColor Green "### FTP server installed and configured ###"
+	Write-Host -ForegroundColor Green "###########################################"
+	Write-Host
+	Write-Host
+
 }else {
 	Write-Host 
 	Write-Host -ForegroundColor red "################################"
@@ -512,47 +579,6 @@ if($FTP -eq "yes"){
 	Write-Host
 	Start-Sleep -s 5
 }
-
-
-################################################
-## write new password and ftp username to file
-################################################
-
-# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
-# Font Ivrit
-
-'-------------------------------------------------------------------', `
-'  ____  _             _              ____  __  __ ____             ', `
-' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
-' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
-'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
-' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
-'   ____ _                 _   ___           _        _ _           ', `
-'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
-' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
-' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
-'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
-'                                                                   ', `
-'-------------------------------------------------------------------', `
-'New FTP name and password', `
-'-------------------------------------------------------------------', `
-'Host: '+$ENV:COMPUTERNAME, `
-'-------------------------------------------------------------------', `
-'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
-'-------------------------------------------------------------------', `
-'new ftp user:', `
-$FTPuserName, `
-'-------------------------------------------------------------------', `
-'new password:', `
-$ftppassword, `
-'-------------------------------------------------------------------', `
-'-------------------------------------------------------------------', `
-'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
-'-------------------------------------------------------------------', `
-'-------------------------------------------------------------------'  | `
-out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
-
-# Start-Sleep -s 1
 
 
 ################################################
@@ -566,7 +592,6 @@ if($UPDATE -eq "yes"){
 	Write-Host -ForegroundColor Yellow "# Install PSWindowsUpdate modul for PowerShell #"
 	Write-Host -ForegroundColor Yellow "################################################"
 	Write-Host
-	# pause
 
 	Install-Module -Name PSWindowsUpdate -Force
 	Start-Sleep -s 2
@@ -607,20 +632,37 @@ if($ADMINUPDATE -eq "yes"){
 	Rename-LocalUser -Name "Administrator"  -NewName "GottliebKrause"
 	wmic useraccount where "Name='GottliebKrause'" set PasswordExpires=false
 
-	'New admin name and password', `
-	$t, `
-	'--------------------', `
-	'new password', `
-	$Password, `
-	'--------------------', `
-	'new admin user', `
+	'-------------------------------------------------------------------', `
+	'  ____  _             _              ____  __  __ ____             ', `
+	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
+	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
+	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
+	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
+	'   ____ _                 _   ___           _        _ _           ', `
+	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
+	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
+	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
+	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
+	'                                                                   ', `
+	'-------------------------------------------------------------------', `
+	'New Administrator name and password', `
+	'-------------------------------------------------------------------', `
+	'Host: '+$ENV:COMPUTERNAME, `
+	'-------------------------------------------------------------------', `
+	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
+	'-------------------------------------------------------------------', `
+	'new admin user:', `
 	'"GottliebKrause"', `
-	'--------------------', `
-	'DELETE THIS FILE IMMEDIATELY', `
-	'--------------------'  |  `
+	'-------------------------------------------------------------------', `
+	'new password:', `
+	$Password, `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------', `
+	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------'  | `
 	out-file $env:USERPROFILE\Desktop\admin_password_username.txt
 
-	Notepad $env:USERPROFILE\Desktop\admin_password_username.txt 
 
 }else {
 	Write-Host -ForegroundColor red "#########################################"
