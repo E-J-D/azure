@@ -341,7 +341,7 @@ $objShortCut.Save()
 Write-Host
 Write-Host 
 Write-Host -ForegroundColor Yellow "#######################################"
-Write-Host -ForegroundColor Yellow "###     installing Powershell 7     ###"
+Write-Host -ForegroundColor Yellow "### installing PS7 module sqlserver ###"
 Write-Host -ForegroundColor Yellow "#######################################"
 Write-Host
 Write-Host
@@ -351,7 +351,7 @@ Install-Module -Name SqlServer -force
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "########################################"
-Write-Host -ForegroundColor Green "###      PowerShell 7 installed      ###"
+Write-Host -ForegroundColor Green "###  PS7 module sqlserver installed  ###"
 Write-Host -ForegroundColor Green "########################################"
 Write-Host
 Write-Host
@@ -382,8 +382,7 @@ Write-Host -ForegroundColor Yellow "####################################"
 Write-Host -ForegroundColor Yellow "###     installing Notepad++     ###"
 Write-Host -ForegroundColor Yellow "####################################"
 Write-Host
-Write-Host Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64' -ArgumentList /S -PassThru
-Write-Host
+Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64.exe' -ArgumentList /S -PassThru
 Write-Host
 Write-Host -ForegroundColor Green "#######################################"
 Write-Host -ForegroundColor Green "###       Notepad++ installed       ###"
