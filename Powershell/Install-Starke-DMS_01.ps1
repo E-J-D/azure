@@ -123,7 +123,7 @@ $FTProotFolderpath = "d:\dms-data\ftp-root"
 ################################################
 
 Start-Transcript -Path "c:\install\_Log-Install-Starke-DMS_01-$t.txt" 
-
+Start-Sleep -s 3
 
 ################################################
 ## stop script on PowerShell error 
