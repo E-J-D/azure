@@ -382,7 +382,7 @@ Write-Host -ForegroundColor Yellow "####################################"
 Write-Host -ForegroundColor Yellow "###     installing Notepad++     ###"
 Write-Host -ForegroundColor Yellow "####################################"
 Write-Host
-Write-HostStart-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64' -ArgumentList /S -PassThru
+Write-Host Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64' -ArgumentList /S -PassThru
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "#######################################"
