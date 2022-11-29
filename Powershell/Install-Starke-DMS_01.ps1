@@ -1,21 +1,27 @@
-﻿# 22.11.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
-# Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following installation
-# =========================================================================================
-#
-# -FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
-# -FTPuser     # name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
-# -FTPpass     # password for logging into the FTP server / e.g. -FTPpass 'verysecretpassword'
-# -customerno  # client customer number which is needed for naming the new server and the database creation / e.g. -customerno '23545'
-#
-# Tests
-# .\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '50999'  
-# .\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '56999'  
-# .\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '57999'  
-# .\Install-Starke-DMS_01.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999'  
-# 
-# VMware lokal test environment (22.11.2022)
-# .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
+﻿<# 22.11.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following installation
+=========================================================================================
 
+-FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
+-FTPuser     # name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
+-FTPpass     # password for logging into the FTP server / e.g. -FTPpass 'verysecretpassword'
+-customerno  # client customer number which is needed for naming the new server and the database creation / e.g. -customerno '23545'
+
+-POWERSHELL7 # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
+-FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
+-UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
+-ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
+
+
+Tests
+.\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '50999'  
+.\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '56999'  
+.\Install-Starke-DMS_01.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '57999'  
+.\Install-Starke-DMS_01.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999'  
+
+VMware lokal test environment (22.11.2022)
+.\Install-Starke-DMS_01.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
+#>
 
 #######################################
 ## command line parameter definition 
@@ -26,10 +32,15 @@ param (
 	[Parameter(Mandatory=$true)][string]$FTPuser,
 	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno
+
+	[string]$POWERSHELL7 = 'yes',
+	[string]$FTP = 'yes',
+	[string]$UPDATE = 'no',
+	[string]$ADMINUPDATE = 'yes',
 )
 
 
-#######################################
+<#######################################
 ## switch install components on/off
 #######################################
 
@@ -37,6 +48,10 @@ $POWERSHELL7 = "yes"
 $FTP = "yes"
 $UPDATE = "no"
 $ADMINUPDATE = "yes"
+
+# AM 29.11.22 14:37 nach oben überführt
+
+#>
 
 #######################################
 ## generate timestamp
@@ -64,7 +79,7 @@ $t=Get-TimeStamp
 $t=(get-date -format "yyyy-MM-dd_HH-mm-ss")
 
 Start-Sleep -s 1
-$tlang1 = (Get-Date)
+# $tlang1 = (Get-Date)
 
 
 #######################################
@@ -104,29 +119,6 @@ $FTProotFolderpath = "d:\dms-data\ftp-root"
 
 
 ################################################
-## write new password and ftp username to file
-################################################
-
-'New FTP name and password', `
-'-------------------------------', `
-$tlang1, `
-'-------------------------------', `
-'new ftp user', `
-$FTPuserName, `
-'-------------------------------', `
-'new password', `
-$ftppassword, `
-'-------------------------------', `
-'-------------------------------', `
-'DELETE THIS FILE IMMEDIATELY', `
-'-------------------------------', `
-'-------------------------------'  | `
-out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
-
-Start-Sleep -s 1
-
-
-################################################
 ## start logging 
 ################################################
 
@@ -141,7 +133,9 @@ $ErrorActionPreference = "Stop"
 
 
 ################################################
+################################################
 ## let's beginn
+################################################
 ################################################
 
 Write-Host 
@@ -152,7 +146,7 @@ Write-Host
 
 
 ##################################################
-## disable autostart for Windows server-manager
+## disable autostart of Windows server-manager
 ##################################################
 
 Invoke-Command -ComputerName localhost -ScriptBlock { New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value "0x1" –Force} 
@@ -517,7 +511,48 @@ if($FTP -eq "yes"){
 	Write-Host -ForegroundColor red "################################"
 	Write-Host
 	Start-Sleep -s 5
-}	
+}
+
+
+################################################
+## write new password and ftp username to file
+################################################
+
+# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
+# Font Ivrit
+
+'-------------------------------------------------------------------', `
+'  ____  _             _              ____  __  __ ____             ', `
+' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
+' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
+'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
+' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
+'   ____ _                 _   ___           _        _ _           ', `
+'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
+' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
+' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
+'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
+'                                                                   ', `
+'-------------------------------------------------------------------', `
+'New FTP name and password', `
+'-------------------------------------------------------------------', `
+'Host: '+$ENV:COMPUTERNAME, `
+'-------------------------------------------------------------------', `
+'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
+'-------------------------------------------------------------------', `
+'new ftp user:', `
+$FTPuserName, `
+'-------------------------------------------------------------------', `
+'new password:', `
+$ftppassword, `
+'-------------------------------------------------------------------', `
+'-------------------------------------------------------------------', `
+'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
+'-------------------------------------------------------------------', `
+'-------------------------------------------------------------------'  | `
+out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
+
+# Start-Sleep -s 1
 
 
 ################################################
