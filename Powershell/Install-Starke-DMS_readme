@@ -1,4 +1,4 @@
-22.11.2022 Eike Doose
+30.11.2022 Eike Doose
 AutoInstaller for Starke-DMS®
 The files "Install-Starke-DMS*" does the silent install. Change this file if neccessary.
 
@@ -34,7 +34,7 @@ dir
 
 #####################################
 #####################################
-## .\Install-Starke-DMS_02+03.ps1 ##
+## .\Install-Starke-DMS_02.ps1 ##
 NFR environment
 =====================================
 
