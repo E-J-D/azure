@@ -231,8 +231,8 @@ Write-Host -ForegroundColor Yellow "#################################"
 Write-Host
 Write-Host
 
-# download the PowerShell7 installer
-curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/PowerShell-7.3.0-win-x64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\PowerShell-7.3.0-win-x64.msi --create-dirs
+# download the PowerShell7 installer // 30.11.2022 => DO NOT USE THE POWERSHELL-7.3.0 INSTALLER!
+curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/PowerShell-7.2.7-win-x64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi --create-dirs
 
 # download the Ansible config script
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
@@ -265,7 +265,7 @@ if($POWERSHELL7 -eq "yes"){
 	Write-Host
 	Write-Host
 	
-	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\PowerShell-7.3.0-win-x64.msi -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
+	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
 	
 	# create desktop shortcut for PowerShell 7 and run always as administrator
 	$objShell = New-Object -ComObject ("WScript.Shell")
