@@ -616,7 +616,7 @@ if($UPDATE -eq "yes"){
 ## change admin name und password
 ################################################
 if($ADMINUPDATE -eq "yes"){
-	$NewAdminPassword = Scramble-String $password
+	$NewAdminPassword = Scramble-String $ftppassword
 	$NewAdminPassword = convertto-securestring $password -asplaintext -force
 	Set-LocalUser -Name Administrator -Password $NewAdminPassword –Verbose
 
