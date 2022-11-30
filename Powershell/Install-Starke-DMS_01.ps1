@@ -45,13 +45,14 @@ param (
 ################################################
 $ErrorActionPreference = "Stop"
 
-
+<#
 ################################################
 ## throw if PS > 5
 ################################################
 If ($PSVersionTable.PSVersion.Major -gt 5) {
     Throw "PowerShell version 5 is required."
 }
+#>
 
 ################################################
 ## intro and countdown
@@ -102,7 +103,7 @@ $FTPsiteFull = "IIS:\Sites\SDMSC1-FTPSite01"
 $FTPsiteShort = "SDMSC1-FTPSite01"
 $FTPsitePath = "d:\dms-data\ftp-root\SDMSC1-FTPSite01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
-$FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
+# $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
 $FTProotFolderpath = "d:\dms-data\ftp-root"
 
@@ -484,6 +485,7 @@ if($FTP -eq "yes"){
 
 	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=1
 	$ftppassword = Scramble-String $password
+	$FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 	New-LocalUser -Name $FTPuserName `
 	-FullName "Starke-DMS Cloud 1.0 FileXchange user" `
 	-Description "FTP user" `
