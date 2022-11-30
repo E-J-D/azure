@@ -40,46 +40,35 @@ param (
 )
 
 
-<#######################################
-## switch install components on/off
-#######################################
+################################################
+## stop script on PowerShell error 
+################################################
+$ErrorActionPreference = "Stop"
 
-$POWERSHELL7 = "yes"
-$FTP = "yes"
-$UPDATE = "no"
-$ADMINUPDATE = "yes"
 
-# AM 29.11.22 14:37 nach oben überführt
+################################################
+## throw if PS > 5
+################################################
+If ($PSVersionTable.PSVersion.Major -gt 5) {
+    Throw "PowerShell version 5 is required."
+}
 
-#>
+################################################
+## intro and countdown
+################################################
+
+Write-Host -ForegroundColor Yellow "#######################################"
+Write-Host -ForegroundColor Yellow "### Starke-DMS® unattended install ####"
+Write-Host -ForegroundColor Yellow "#######################################"
+Start-Sleep -s 2
+Clear-Host []
 
 #######################################
 ## generate timestamp
 #######################################
 
-<#
-Function Get-Timestamp
-{
-$n=Get-Date
-#pad values with leading 0 if necessary
-$mo=(($n.Month).ToString()).PadLeft(2,"0")
-$dy=(($n.Day).ToString()).PadLeft(2,"0")
-$yr=($n.Year).ToString()
-$hr=(($n.hour).ToString()).PadLeft(2,"0")
-$mn=(($n.Minute).ToString()).PadLeft(2,"0")
-$sec=(($n.Second).ToString()).PadLeft(2,"0")
-
-$result=$yr+"-"+$mo+"-"+$dy+"_"+$hr+"-"+$mn+"-"+$sec
-
-return $result
-}
-$t=Get-TimeStamp
-#>
-
 $t=(get-date -format "yyyy-MM-dd_HH-mm-ss")
-
 Start-Sleep -s 1
-# $tlang1 = (Get-Date)
 
 
 #######################################
@@ -103,7 +92,7 @@ $password = Get-RandomCharacters -length 5 -characters 'abcdefghiklmnoprstuvwxyz
 $password += Get-RandomCharacters -length 5 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
 $password += Get-RandomCharacters -length 4 -characters '1234567890'
 $password += Get-RandomCharacters -length 2 -characters '!"§$%&/()=?}][{@#*+'
-$ftppassword = Scramble-String $password
+
 
 ######################################
 ## Parameter for FTP server install ##
@@ -494,6 +483,7 @@ if($FTP -eq "yes"){
 	-LocalPort 21,60000-60100 
 
 	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=1
+	$ftppassword = Scramble-String $password
 	New-LocalUser -Name $FTPuserName `
 	-FullName "Starke-DMS Cloud 1.0 FileXchange user" `
 	-Description "FTP user" `
