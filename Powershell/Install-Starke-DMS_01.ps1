@@ -123,7 +123,7 @@ Write-Host @("`n`r `n`r
 ################################################
 
 Clear-Host []
-PrintJobToDo "Starke-DMS® unattended install"
+PrintJobToDo "Starke-DMS® unattended install part 1 of 2"
 Start-Sleep -s 3
 Clear-Host []
 
@@ -291,20 +291,10 @@ $files = @($files_PS,$files_NPP,$files_EDGE)
 # Perform iteration to download the files to server
 foreach ($i in $files) {
 	curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/"$i"" --ssl-reqd -k --output C:\install\StarkeDMS-latest\$i --create-dirs
-#    Add-Content -Path "$i\SampleFile.txt" -Value "This is the content of the file"
 }
 
-# download the Ansible config script
+# download the Ansible config script manually
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
-
-# download the PowerShell7 installer // 30.11.2022 => DO NOT USE THE POWERSHELL-7.3.0 INSTALLER!
-#curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/PowerShell-7.2.7-win-x64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi --create-dirs
-
-# download the Notepad++ installer
-#curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/npp.8.4.7.Installer.x64.exe" --ssl-reqd -k --output C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64.exe --create-dirs
-
-# download the Micrsoft Edge installer
-#curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/MicrosoftEdgeEnterpriseX64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi --create-dirs
 
 PrintJobDone "download finished"
 
