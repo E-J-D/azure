@@ -43,26 +43,90 @@ param (
 ################################################
 ## stop script on PowerShell error 
 ################################################
+
 $ErrorActionPreference = "Stop"
 
-<#
+
 ################################################
-## throw if PS > 5
+## functions for the script
 ################################################
-If ($PSVersionTable.PSVersion.Major -gt 5) {
-    Throw "PowerShell version 5 is required."
+
+function PrintJobToDo($PrintJobToDoValue){
+Write-Host @("`n`r `n`r
+-------------------------------------------------------------------
+  ____  _             _              ____  __  __ ____             
+ / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            
+ \___ \| __/ _´ | ´__| |/ / _ \     | | | | |\/| \___ \            
+  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           
+ |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            
+   ____ _                 _   ___           _        _ _           
+  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ 
+ | |   | |/ _ \| | | |/ _´ |  | || ´_ \/ __| __/ _´ | | |/ _ \ ´__|
+ | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   
+  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   
+                                                                   
+-------------------------------------------------------------------
+
+==> $PrintJobToDoValue
+
+-------------------------------------------------------------------`n`r `n`r
+") -ForegroundColor Yellow
 }
-#>
+
+function PrintJobDone($PrintJobDoneValue){
+Write-Host @("`n`r `n`r
+-------------------------------------------------------------------
+  ____  _             _              ____  __  __ ____             
+ / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            
+ \___ \| __/ _´ | ´__| |/ / _ \     | | | | |\/| \___ \            
+  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           
+ |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            
+   ____ _                 _   ___           _        _ _           
+  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ 
+ | |   | |/ _ \| | | |/ _´ |  | || ´_ \/ __| __/ _´ | | |/ _ \ ´__|
+ | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   
+  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   
+                                                                   
+-------------------------------------------------------------------
+
+==> $PrintJobDoneValue
+
+-------------------------------------------------------------------`n`r `n`r
+") -ForegroundColor Green
+}
+
+function PrintJobError($PrintJobErrorValue){
+Write-Host @("`n`r `n`r
+-------------------------------------------------------------------
+  ____  _             _              ____  __  __ ____             
+ / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            
+ \___ \| __/ _´ | ´__| |/ / _ \     | | | | |\/| \___ \            
+  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           
+ |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            
+   ____ _                 _   ___           _        _ _           
+  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ 
+ | |   | |/ _ \| | | |/ _´ |  | || ´_ \/ __| __/ _´ | | |/ _ \ ´__|
+ | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   
+  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   
+                                                                   
+-------------------------------------------------------------------
+
+==> $PrintJobErrorValue
+
+-------------------------------------------------------------------`n`r `n`r
+") -ForegroundColor Red
+}
+
 
 ################################################
 ## intro and countdown
 ################################################
 
-Write-Host -ForegroundColor Yellow "#######################################"
-Write-Host -ForegroundColor Yellow "### Starke-DMS® unattended install ####"
-Write-Host -ForegroundColor Yellow "#######################################"
-Start-Sleep -s 2
 Clear-Host []
+PrintJobToDo "Starke-DMS® unattended install"
+Start-Sleep -s 3
+Clear-Host []
+
 
 #######################################
 ## generate timestamp
@@ -128,11 +192,8 @@ $ErrorActionPreference = "Stop"
 ################################################
 ################################################
 
-Write-Host 
-Write-Host -ForegroundColor Yellow "###############################"
-Write-Host -ForegroundColor Yellow "### set default OS settings ###"
-Write-Host -ForegroundColor Yellow "###############################"
-Write-Host
+PrintJobToDo "set default OS settings"
+Start-Sleep -s 1
 
 
 ##################################################
@@ -210,26 +271,14 @@ $Drive | Set-CimInstance -Property @{Label='DATA'}
 Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'D:'" |
   Select-Object -Property SystemName, Label, DriveLetter
 
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "################################"
-Write-Host -ForegroundColor Green "### default OS settings done ###"
-Write-Host -ForegroundColor Green "################################"
-Write-Host
-Write-Host
+PrintJobDone "default OS settings done"
 
 
 ################################################
 ## Download section
 ################################################
 
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "#################################"
-Write-Host -ForegroundColor Yellow "###   downloading the stuff   ###"
-Write-Host -ForegroundColor Yellow "#################################"
-Write-Host
-Write-Host
+PrintJobToDo "downloading the stuff"
 
 # download the PowerShell7 installer // 30.11.2022 => DO NOT USE THE POWERSHELL-7.3.0 INSTALLER!
 curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/PowerShell-7.2.7-win-x64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi --create-dirs
@@ -243,13 +292,7 @@ curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/npp.8.4.7.Installer.x64.exe" 
 # download the Micrsoft Edge installer
 curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/MicrosoftEdgeEnterpriseX64.msi" --ssl-reqd -k --output C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi --create-dirs
 
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "######################################"
-Write-Host -ForegroundColor Green "###       download finished        ###"
-Write-Host -ForegroundColor Green "######################################"
-Write-Host
-Write-Host
+PrintJobDone "download finished"
 
 
 ################################################
@@ -257,14 +300,7 @@ Write-Host
 ################################################
 if($POWERSHELL7 -eq "yes"){
 	# run the PowerShell7 installer in silent mode
-	Write-Host
-	Write-Host 
-	Write-Host -ForegroundColor Yellow "###############################"
-	Write-Host -ForegroundColor Yellow "### installing PowerShell 7 ###"
-	Write-Host -ForegroundColor Yellow "###############################"
-	Write-Host
-	Write-Host
-	
+	PrintJobToDo "installing PowerShell 7"
 	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
 	
 	# create desktop shortcut for PowerShell 7 and run always as administrator
@@ -274,20 +310,12 @@ if($POWERSHELL7 -eq "yes"){
 	$objShortCut.Save()
 	
 }else {
-	Write-Host -ForegroundColor red "###################################"
-	Write-Host -ForegroundColor red "### Powershell 7 not installed  ###"
-	Write-Host -ForegroundColor red "###################################"
-	Start-Sleep -s 5
+	PrintJobError "Powershell 7 not installed"
+	Start-Sleep -s 3
 }
 
 
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "##################################"
-Write-Host -ForegroundColor Yellow "### creating desktop shortcuts ###"
-Write-Host -ForegroundColor Yellow "##################################"
-Write-Host
-Write-Host
+PrintJobToDo "creating desktop shortcuts"
 
 $bytes = [System.IO.File]::ReadAllBytes("$Home\Desktop\PowerShell7.lnk")
 $bytes[0x15] = $bytes[0x15] -bor 0x20 #set byte 21 (0x15) bit 6 (0x20) ON
@@ -328,23 +356,11 @@ $objShortCut.Save()
 ## Powershell 7 Modul sqlserver install
 ## necessary for sqlcmd cmdlet
 ################################################
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "#######################################"
-Write-Host -ForegroundColor Yellow "### installing PS7 module sqlserver ###"
-Write-Host -ForegroundColor Yellow "#######################################"
-Write-Host
-Write-Host
+
+PrintJobToDo "installing PS7 module sqlserver"
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name SqlServer -force
-
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "########################################"
-Write-Host -ForegroundColor Green "###  PS7 module sqlserver installed  ###"
-Write-Host -ForegroundColor Green "########################################"
-Write-Host
-Write-Host
+PrintJobDone "PS7 module sqlserver installed"
 
 
 ################################################
@@ -353,77 +369,32 @@ Write-Host
 
 powershell.exe -File c:\install\ConfigureRemotingForAnsible.ps1
 # iex(iwr https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1).Content
-
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "######################################"
-Write-Host -ForegroundColor Green "### Ansible config script finished ###"
-Write-Host -ForegroundColor Green "######################################"
-Write-Host
-Write-Host
+PrintJobDone "Ansible config script finished"
 
 
 ################################################
 ## install Notepad++ in silent mode
 ################################################
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "####################################"
-Write-Host -ForegroundColor Yellow "###     installing Notepad++     ###"
-Write-Host -ForegroundColor Yellow "####################################"
-Write-Host
+PrintJobToDo "installing Notepad++"
 Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64.exe' -ArgumentList /S -PassThru
-Write-Host
-Write-Host -ForegroundColor Green "#######################################"
-Write-Host -ForegroundColor Green "###       Notepad++ installed       ###"
-Write-Host -ForegroundColor Green "#######################################"
-Write-Host
-Write-Host
+PrintJobDone "Notepad++ installed"
 
 
 ################################################
 ## install Microsoft Edge in silent mode
 ################################################
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "####################################"
-Write-Host -ForegroundColor Yellow "###  installing Microsoft Edge   ###"
-Write-Host -ForegroundColor Yellow "####################################"
-Write-Host
-Write-Host
-
+PrintJobToDo "installing Microsoft Edge"
 Start-Process -wait -FilePath C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi -ArgumentList "/quiet"
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "######################################"
-Write-Host -ForegroundColor Green "###    Microsoft Edge installed    ###"
-Write-Host -ForegroundColor Green "######################################"
-Write-Host
-Write-Host
-Write-Host
-Write-Host 
-Write-Host -ForegroundColor Yellow "#####################################"
-Write-Host -ForegroundColor Yellow "###    remove Internet Explorer   ###"
-Write-Host -ForegroundColor Yellow "#####################################"
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green " Uninstall Internet Explorer 11"
+PrintJobDone "Microsoft Edge installed"
+PrintJobToDo "Remove Internet Explorer"
 Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "######################################"
-Write-Host -ForegroundColor Green "###    Internet Explorer removed   ###"
-Write-Host -ForegroundColor Green "######################################"
-Write-Host
-Write-Host
+PrintJobDone "Internet Explorer removed"
 
 
 ################################################
 ## create media structure
 ################################################
-Write-Host -ForegroundColor yellow "##########################################"
-Write-Host -ForegroundColor yellow "######## creating media structur #########"
-Write-Host -ForegroundColor yellow "##########################################"
+PrintJobToDo "creating media structur"
 
 New-Item -Path "d:\" -Name "dms-data" -ItemType "directory"
 New-Item -Path "d:\" -Name "dms-config" -ItemType "directory"
@@ -439,22 +410,16 @@ New-Item -Path "d:\dms-data" -Name "ftp-data" -ItemType "directory"
 New-Item -Path "d:\dms-data\backup" -Name "sql" -ItemType "directory"
 New-Item -Path "d:\" -Name "tools" -ItemType "directory"
 New-Item -Path "d:\tools" -Name "ansible" -ItemType "directory"
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "#########################################"
-Write-Host -ForegroundColor Green "###       media structur created      ###"
-Write-Host -ForegroundColor Green "#########################################"
-Write-Host
-Write-Host
+
+PrintJobDone "media structur created"
+
 
 ################################################
 ## install FTP server
 ################################################
 
 if($FTP -eq "yes"){
-	Write-Host -ForegroundColor yellow "##########################################"
-	Write-Host -ForegroundColor yellow "########  installing FTP server  #########"
-	Write-Host -ForegroundColor yellow "##########################################"
+	PrintJobToDo "installing FTP server"
 
 	Install-WindowsFeature Web-Ftp-Server -IncludeAllSubFeature -IncludeManagementTools
 	Install-Module -Name IISAdministration -force
@@ -553,22 +518,11 @@ if($FTP -eq "yes"){
 	'-------------------------------------------------------------------'  | `
 	out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
 
-
-	Write-Host
-	Write-Host
-	Write-Host -ForegroundColor Green "###########################################"
-	Write-Host -ForegroundColor Green "### FTP server installed and configured ###"
-	Write-Host -ForegroundColor Green "###########################################"
-	Write-Host
-	Write-Host
+	PrintJobDone "FTP server installed and configured"
 
 }else {
-	Write-Host 
-	Write-Host -ForegroundColor red "################################"
-	Write-Host -ForegroundColor red "### FTP server not installed ###"
-	Write-Host -ForegroundColor red "################################"
-	Write-Host
-	Start-Sleep -s 5
+	PrintJobError "FTP server not installed"
+	Start-Sleep -s 3
 }
 
 
@@ -578,11 +532,7 @@ if($FTP -eq "yes"){
 # Install PSWindowsUpdate Modul for PowerShell
 
 if($UPDATE -eq "yes"){
-	Write-Host 
-	Write-Host -ForegroundColor Yellow "################################################"
-	Write-Host -ForegroundColor Yellow "# Install PSWindowsUpdate modul for PowerShell #"
-	Write-Host -ForegroundColor Yellow "################################################"
-	Write-Host
+	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
 
 	Install-Module -Name PSWindowsUpdate -Force
 	Start-Sleep -s 2
@@ -590,24 +540,14 @@ if($UPDATE -eq "yes"){
 	Start-Sleep -s 2
 
 	# Install all pending Updates and restart without asking
-	Write-Host 
-	Write-Host -ForegroundColor Yellow "###############################################"
-	Write-Host -ForegroundColor Yellow "###       Install all pending updates       ###"
-	Write-Host -ForegroundColor Yellow "###############################################"
-	Write-Host
+	PrintJobToDo "Install all pending updates"
 	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
 	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
-	Write-Host
-	Write-Host -ForegroundColor green "##########################################################"
-	Write-Host -ForegroundColor green "###               all updates installed                ###"
-	Write-Host -ForegroundColor green "##########################################################"
-	Write-Host
-	Start-Sleep -s 5
+	PrintJobDone "all updates installed"
+	Start-Sleep -s 3
 
 }else {
-	Write-Host -ForegroundColor red "##############################"
-	Write-Host -ForegroundColor red "### updates not installed  ###"
-	Write-Host -ForegroundColor red "##############################"
+	PrintJobError "Windows updates not installed"
 	Start-Sleep -s 5
 }
 
@@ -656,21 +596,10 @@ if($ADMINUPDATE -eq "yes"){
 
 
 }else {
-	Write-Host -ForegroundColor red "#########################################"
-	Write-Host -ForegroundColor red "### NO admin name and password change ###"
-	Write-Host -ForegroundColor red "#########################################"
+	PrintJobError "NO admin name and password change"
 	Start-Sleep -s 5
 }
 
-
-<#
-################################################
-## write date and time to file
-################################################
-
-$tlang2 = (Get-Date)
-'--------------------','time at the end of installation',$tlang2,'--------------------'  | Add-content $env:USERPROFILE\Desktop\ftp_password_username.txt
-#>
 
 ################################################
 ## restart the computer
@@ -683,13 +612,10 @@ $tlang2 = (Get-Date)
 ## we're done
 ################################################
 
-Write-Host
-Write-Host
-Write-Host -ForegroundColor green "##############################################"
-Write-Host -ForegroundColor green "####   Install-Starke-DMS_01.ps1 finished  ###"
-Write-Host -ForegroundColor green "##############################################"
-Write-Host
-Write-Host
+Clear-Host []
+PrintJobDone "Install-Starke-DMS_01.ps1 finished"
+Start-Sleep -s 5
+PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_02.ps1"
 
 
 ################################################
