@@ -32,7 +32,7 @@ param (
 	[Parameter(Mandatory=$true)][string]$customerno,
 
 	[string]$FTP = 'no',
-	[string]$UPDATE = 'yes',
+	[string]$UPDATE = 'yes'
 )
 
 
