@@ -1,4 +1,4 @@
-﻿<# 22.11.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 05.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following installation
 =========================================================================================
 

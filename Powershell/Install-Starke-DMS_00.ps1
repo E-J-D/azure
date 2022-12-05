@@ -1,5 +1,5 @@
 ﻿<# 05.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
-Install-Starke-DMS_00.ps1 install PowerShell 7 which is needed for following installation
+Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
 
 -FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
@@ -7,7 +7,6 @@ Install-Starke-DMS_00.ps1 install PowerShell 7 which is needed for following ins
 -FTPpass     # password for logging into the FTP server / e.g. -FTPpass 'verysecretpassword'
 -customerno  # client customer number which is needed for naming the new server and the database creation / e.g. -customerno '23545'
 
--POWERSHELL7 # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
 -FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
 -UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
