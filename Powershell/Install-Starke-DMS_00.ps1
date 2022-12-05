@@ -25,7 +25,7 @@ Install-Starke-DMS_00.ps1 basic settings and OS update
 #######################################
 
 param (
-	[string]$FTPserver = 'ftp.get--it.de',
+	[string]$FTPserver = '172.28.0.11',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
 	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno,
@@ -428,6 +428,7 @@ if($UPDATE -eq "yes"){
 
 	# Install all pending Updates and restart without asking
 	PrintJobToDo "Install all pending updates"
+	stop-transcript
 	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
 	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 	PrintJobDone "all updates installed"
@@ -446,7 +447,7 @@ Clear-Host []
 PrintJobToDo "Restart in 60s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
 Start-Sleep -s 60
 
-stop-transcript
+# stop-transcript / Transcript is broken if OS update installs PowerShell engine update - because of this the transcript stops before updating
 Clear-Host []
 
 Restart-computer -force

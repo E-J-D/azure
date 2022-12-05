@@ -28,7 +28,7 @@ Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following ins
 #######################################
 
 param (
-	[string]$FTPserver = 'ftp.get--it.de',
+	[string]$FTPserver = '172.28.0.11',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
 	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno,
