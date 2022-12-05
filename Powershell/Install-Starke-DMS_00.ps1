@@ -297,8 +297,10 @@ PrintJobDone "media structur created"
 ################################################
 
 if($FTPbasic -eq "yes"){
-	PrintJobToDo "installing FTP server"
+	PrintJobToDo "installing FTP server basics"
 
+	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+	Start-Sleep -s 3
 	Install-WindowsFeature Web-Ftp-Server -IncludeAllSubFeature -IncludeManagementTools
 	Start-Sleep -s 3
 	Install-Module -Name IISAdministration -force
@@ -310,7 +312,7 @@ if($FTPbasic -eq "yes"){
 	import-module WebAdministration
 
 
-	PrintJobDone "FTP server basics installed and configured"
+	PrintJobDone "FTP server basics installed "
 
 }else {
 	PrintJobError "FTP server basics not installed"
