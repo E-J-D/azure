@@ -60,4 +60,5 @@ dir
 	-LIZserver 'https://starke-dms-license.azurewebsites.net' `
 	-LIZuid '{7666BBC5-7C53-4B17-9444-1CB0B707AF5C}' `
 	-LIZtargetdir 'd:\dms-config' `
-	-saPass 'saAdmin00!' 
+	-saPass 'saAdmin00!' `
+	-UPDATE 'yes'

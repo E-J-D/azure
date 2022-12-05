@@ -294,7 +294,7 @@ foreach ($i in $files) {
 }
 
 # download the Ansible config script manually
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
+# curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
 
 PrintJobDone "download finished"
 
@@ -371,9 +371,9 @@ PrintJobDone "PS7 module sqlserver installed"
 ## Ansible config script
 ################################################
 
-powershell.exe -File c:\install\ConfigureRemotingForAnsible.ps1
-# iex(iwr https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1).Content
-PrintJobDone "Ansible config script finished"
+#powershell.exe -File c:\install\ConfigureRemotingForAnsible.ps1
+## iex(iwr https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1).Content
+#PrintJobDone "Ansible config script finished"
 
 
 ################################################
@@ -531,17 +531,22 @@ if($FTP -eq "yes"){
 
 
 ################################################
+## install update modules for Powershell
+################################################
+
+PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+Install-Module -Name PSWindowsUpdate -Force
+Start-Sleep -s 2
+get-command -module PSWindowsUpdate
+Start-Sleep -s 2
+PrintJobDone "PSWindowsUpdate modul for PowerS installed"
+
+
+################################################
 ## install updates
 ################################################
-# Install PSWindowsUpdate Modul for PowerShell
 
 if($UPDATE -eq "yes"){
-	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
-
-	Install-Module -Name PSWindowsUpdate -Force
-	Start-Sleep -s 2
-	get-command -module PSWindowsUpdate
-	Start-Sleep -s 2
 
 	# Install all pending Updates and restart without asking
 	PrintJobToDo "Install all pending updates"
