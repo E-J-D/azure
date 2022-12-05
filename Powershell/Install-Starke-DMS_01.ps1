@@ -123,7 +123,7 @@ Write-Host @("`n`r `n`r
 ################################################
 
 Clear-Host []
-PrintJobToDo "Starke-DMS® unattended install part 1 of 2"
+PrintJobToDo "Starke-DMS® unattended install part 2 of 3"
 Start-Sleep -s 3
 Clear-Host []
 

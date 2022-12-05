@@ -5,6 +5,7 @@ The files "Install-Starke-DMS*" does the silent install. Change this file if nec
 Use this PowerShell commands to start the installation.
 
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/AutoUpdate.ps1" --output c:\install\AutoUpdate.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_00.ps1" --output c:\install\Install-Starke-DMS_00.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_01.ps1" --output c:\install\Install-Starke-DMS_01.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02.ps1" --output c:\install\Install-Starke-DMS_02.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 cd c:\install
@@ -13,7 +14,7 @@ dir
 
 #####################################
 #####################################
-## .\Install-Starke-DMS_01.ps1 ##
+## .\Install-Starke-DMS_00/01.ps1 ##
 # NFR environment
 =====================================
 .\Install-Starke-DMS_01.ps1 -FTPserver '192.168.120.11' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '56999'  
@@ -25,6 +26,12 @@ dir
 
 # VMware lokal test environment (22.11.2022)
 =====================================
+.\Install-Starke-DMS_00.ps1 `
+	-FTPserver '192.168.224.188' `
+	-FTPuser 'hausmeister' `
+	-FTPpass 'hausmeister' `
+	-customerno '57999'
+
 .\Install-Starke-DMS_01.ps1 `
 	-FTPserver '192.168.224.188' `
 	-FTPuser 'hausmeister' `
