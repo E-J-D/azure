@@ -426,10 +426,13 @@ if($FTP -eq "yes"){
 	PrintJobToDo "installing FTP server"
 
 	Install-WindowsFeature Web-Ftp-Server -IncludeAllSubFeature -IncludeManagementTools
+	Start-Sleep -s 3
 	Install-Module -Name IISAdministration -force
-
+	Start-Sleep -s 3
 	Import-Module ServerManager
+	Start-Sleep -s 2
 	Add-WindowsFeature Web-Scripting-Tools
+	Start-Sleep -s 2
 	import-module WebAdministration
 
 	# https://blog.kmsigma.com/2016/02/25/removing-default-web-site-application-pool/
@@ -486,7 +489,7 @@ if($FTP -eq "yes"){
 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertStoreName -Value "My" 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value (Get-ChildItem -path cert:\LocalMachine\My | Where-Object -Property Subject -like "CN=*").Thumbprint
-
+	
 	Remove-Item C:\inetpub\ -recurse
 
 	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
