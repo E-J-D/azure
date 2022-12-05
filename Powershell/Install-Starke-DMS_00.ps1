@@ -30,7 +30,7 @@ param (
 	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno,
 
-	[string]$FTP = 'no',
+	[string]$FTPbasic = 'yes',
 	[string]$UPDATE = 'yes'
 )
 
@@ -296,7 +296,7 @@ PrintJobDone "media structur created"
 ## install FTP server
 ################################################
 
-if($FTP -eq "yes"){
+if($FTPbasic -eq "yes"){
 	PrintJobToDo "installing FTP server"
 
 	Install-WindowsFeature Web-Ftp-Server -IncludeAllSubFeature -IncludeManagementTools
@@ -309,100 +309,11 @@ if($FTP -eq "yes"){
 	Start-Sleep -s 2
 	import-module WebAdministration
 
-	# https://blog.kmsigma.com/2016/02/25/removing-default-web-site-application-pool/
-	Remove-IISSite "Default Web Site" -Confirm:$False
-	# Remove-WebAppPool -Name "DefaultAppPool" -Confirm:$false -Verbose
 
-	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=ftp&f=2
-	Set-WebConfiguration "/system.ftpServer/firewallSupport" -PSPath "IIS:\" -Value @{lowDataChannelPort="60000";highDataChannelPort="60100";} 
-	Restart-Service ftpsvc 
-
-	New-NetFirewallRule `
-	-Name "FTP Server Port" `
-	-DisplayName "FTP Server Port" `
-	-Description 'Allow FTP Server Ports' `
-	-Profile Any `
-	-Direction Inbound `
-	-Action Allow `
-	-Protocol TCP `
-	-Program Any `
-	-LocalAddress Any `
-	-LocalPort 21,60000-60100 
-
-	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=1
-	$ftppassword = Scramble-String $password
-	$FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
-	New-LocalUser -Name $FTPuserName `
-	-FullName "Starke-DMS Cloud 1.0 FileXchange user" `
-	-Description "FTP user" `
-	-Password $FTPUserPassword `
-	-PasswordNeverExpires `
-	-AccountNeverExpires 
-
-	New-LocalGroup -Name $FTPgroup
-	Add-LocalGroupMember -Group $FTPgroup -Member $FTPuserName 
-
-	mkdir $FTPsitePath 
-	New-WebFtpSite -Name $FTPsiteShort -IPAddress "*" -Port 21
-	Set-ItemProperty $FTPsiteFull -Name physicalPath -Value $FTPsitePath
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.controlChannelPolicy -Value "SslAllow" 
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslAllow" 
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.authentication.basicAuthentication.enabled -Value $true 
-
-	Add-WebConfiguration "/system.ftpServer/security/authorization" -Location $FTPsiteShort -PSPath IIS:\ -Value @{accessType="Allow";roles=$FTPgroup;permissions="Read,Write"} 
-
-	icacls $FTPsitePath /grant "FTPGroup:(OI)(CI)(F)" 
-
-	Restart-WebItem -PSPath $FTPsiteFull 
-
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.controlChannelPolicy -Value "SslAllow" 
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslAllow" 
-
-	# Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.controlChannelPolicy -Value "SslRequire" 
-	# Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslRequire" 
-
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertStoreName -Value "My" 
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value (Get-ChildItem -path cert:\LocalMachine\My | Where-Object -Property Subject -like "CN=*").Thumbprint
-	
-	Remove-Item C:\inetpub\ -recurse
-
-	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
-	# Font Ivrit
-	'-------------------------------------------------------------------', `
-	'  ____  _             _              ____  __  __ ____             ', `
-	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
-	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
-	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
-	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
-	'   ____ _                 _   ___           _        _ _           ', `
-	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
-	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
-	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
-	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
-	'                                                                   ', `
-	'-------------------------------------------------------------------', `
-	'New FTP name and password', `
-	'-------------------------------------------------------------------', `
-	'Host: '+$ENV:COMPUTERNAME, `
-	'-------------------------------------------------------------------', `
-	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
-	'-------------------------------------------------------------------', `
-	'new ftp user:', `
-	$FTPuserName, `
-	'-------------------------------------------------------------------', `
-	'new password:', `
-	$ftppassword, `
-	'-------------------------------------------------------------------', `
-	'-------------------------------------------------------------------', `
-	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
-	'-------------------------------------------------------------------', `
-	'-------------------------------------------------------------------'  | `
-	out-file $env:USERPROFILE\Desktop\ftp_password_username.txt
-
-	PrintJobDone "FTP server installed and configured"
+	PrintJobDone "FTP server basics installed and configured"
 
 }else {
-	PrintJobError "FTP server not installed"
+	PrintJobError "FTP server basics not installed"
 	Start-Sleep -s 3
 }
 

@@ -36,6 +36,7 @@ dir
 	-FTPserver '192.168.224.188' `
 	-FTPuser 'hausmeister' `
 	-FTPpass 'hausmeister' `
+	-UPDATE 'yes' `
 	-customerno '57999'
 
 
