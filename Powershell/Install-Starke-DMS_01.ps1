@@ -192,6 +192,7 @@ $ErrorActionPreference = "Stop"
 ################################################
 ################################################
 
+<#
 PrintJobToDo "set default OS settings"
 Start-Sleep -s 1
 
@@ -272,7 +273,7 @@ Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'D:'" |
   Select-Object -Property SystemName, Label, DriveLetter
 
 PrintJobDone "default OS settings done"
-
+#>
 
 ################################################
 ## Download section
@@ -318,6 +319,10 @@ if($POWERSHELL7 -eq "yes"){
 	Start-Sleep -s 3
 }
 
+
+################################################
+## creating desktop shortcuts
+################################################
 
 PrintJobToDo "creating desktop shortcuts"
 
@@ -394,7 +399,7 @@ PrintJobToDo "Remove Internet Explorer"
 Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart
 PrintJobDone "Internet Explorer removed"
 
-
+<#
 ################################################
 ## create media structure
 ################################################
@@ -416,7 +421,7 @@ New-Item -Path "d:\" -Name "tools" -ItemType "directory"
 New-Item -Path "d:\tools" -Name "ansible" -ItemType "directory"
 
 PrintJobDone "media structur created"
-
+#>
 
 ################################################
 ## install FTP server

@@ -418,7 +418,7 @@ Install-Module -Name PSWindowsUpdate -Force
 Start-Sleep -s 2
 get-command -module PSWindowsUpdate
 Start-Sleep -s 2
-PrintJobDone "PSWindowsUpdate modul for PowerS installed"
+PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
 
 
 ################################################
@@ -444,8 +444,7 @@ if($UPDATE -eq "yes"){
 ## restart computer
 ################################################
 Clear-Host []
-PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_01.ps1"
-PrintJobToDo "Computer will be restarted after 60s - press STRG-C to interrupt"
+PrintJobToDo "Restart in 60s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
 Start-Sleep -s 60
 
 stop-transcript
