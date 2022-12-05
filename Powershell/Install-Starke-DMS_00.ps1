@@ -413,6 +413,7 @@ if($FTP -eq "yes"){
 ################################################
 
 PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name PSWindowsUpdate -Force
 Start-Sleep -s 2
 get-command -module PSWindowsUpdate
