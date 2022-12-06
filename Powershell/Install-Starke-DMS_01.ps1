@@ -486,6 +486,11 @@ if($FTP -eq "yes"){
 
 	Restart-WebItem -PSPath $FTPsiteFull 
 
+	#create SSL certificate
+	$SSLCERTdomain = ".starke-dms.cloud"
+	$SSLCERTdns    = $customerno + $SSLCERTdomain
+	$SSLCERT=New-SelfSignedCertificate -certstorelocation cert:\localmachine\my -dnsname $SSLCERTdns
+
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.controlChannelPolicy -Value "SslAllow" 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslAllow" 
 
@@ -493,8 +498,9 @@ if($FTP -eq "yes"){
 	# Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslRequire" 
 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertStoreName -Value "My" 
-	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value (Get-ChildItem -path cert:\LocalMachine\My | Where-Object -Property Subject -like "CN=*").Thumbprint
-	
+	#Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value (Get-ChildItem -path cert:\LocalMachine\My | Where-Object -Property Subject -like "CN=*").Thumbprint
+	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value $SSLCERT.thumbprint
+		
 	Remove-Item C:\inetpub\ -recurse
 
 	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer

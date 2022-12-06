@@ -32,6 +32,8 @@ dir
 	-FTPpass 'hausmeister' `
 	-customerno '57999'
 
+cd c:\install
+dir
 .\Install-Starke-DMS_01.ps1 `
 	-FTPserver '192.168.224.188' `
 	-FTPuser 'hausmeister' `
