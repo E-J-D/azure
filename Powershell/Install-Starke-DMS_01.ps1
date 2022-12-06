@@ -1,4 +1,4 @@
-﻿<# 05.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 06.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following installation
 =========================================================================================
 
@@ -579,8 +579,8 @@ if($UPDATE -eq "yes"){
 ## change admin name und password
 ################################################
 if($ADMINUPDATE -eq "yes"){
-	$NewAdminPassword = Scramble-String $ftppassword
-	$NewAdminPassword = convertto-securestring $password -asplaintext -force
+	$newadminpass = Scramble-String $password
+	$NewAdminPassword = convertto-securestring $newadminpass -asplaintext -force
 	Set-LocalUser -Name Administrator -Password $NewAdminPassword –Verbose
 
 	Rename-LocalUser -Name "Administrator"  -NewName "GottliebKrause"
@@ -609,7 +609,7 @@ if($ADMINUPDATE -eq "yes"){
 	'"GottliebKrause"', `
 	'-------------------------------------------------------------------', `
 	'new password:', `
-	$Password, `
+	$newadminpass, `
 	'-------------------------------------------------------------------', `
 	'-------------------------------------------------------------------', `
 	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `

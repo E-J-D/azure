@@ -1,4 +1,4 @@
-﻿<# 05.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 06.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
 
@@ -129,29 +129,6 @@ Clear-Host []
 
 $t=(get-date -format "yyyy-MM-dd_HH-mm-ss")
 Start-Sleep -s 1
-
-
-#######################################
-## password generator
-#######################################
-
-function Get-RandomCharacters($length, $characters) {
-    $random = 1..$length | ForEach-Object { Get-Random -Maximum $characters.length }
-    $private:ofs=""
-    return [String]$characters[$random]
-}
-
-function Scramble-String([string]$inputString){     
-    $characterArray = $inputString.ToCharArray()   
-    $scrambledStringArray = $characterArray | Get-Random -Count $characterArray.Length     
-    $outputString = -join $scrambledStringArray
-    return $outputString 
-}
-
-$password = Get-RandomCharacters -length 5 -characters 'abcdefghiklmnoprstuvwxyz'
-$password += Get-RandomCharacters -length 5 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
-$password += Get-RandomCharacters -length 4 -characters '1234567890'
-$password += Get-RandomCharacters -length 2 -characters '!"§$%&/()=?}][{@#*+'
 
 
 ######################################
@@ -310,7 +287,6 @@ if($FTPbasic -eq "yes"){
 	Add-WindowsFeature Web-Scripting-Tools
 	Start-Sleep -s 2
 	import-module WebAdministration
-
 
 	PrintJobDone "FTP server basics installed "
 

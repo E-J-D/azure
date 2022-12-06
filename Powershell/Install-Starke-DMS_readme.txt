@@ -1,4 +1,4 @@
-30.11.2022 Eike Doose
+06.12.2022 Eike Doose
 AutoInstaller for Starke-DMS®
 The files "Install-Starke-DMS*" does the silent install. Change this file if neccessary.
 
