@@ -165,11 +165,11 @@ $password += Get-RandomCharacters -length 2 -characters '!"§$%&/()=?}][{@#*+'
 
 $FTPsiteFull = "IIS:\Sites\SDMSC1-FTPSite01"
 $FTPsiteShort = "SDMSC1-FTPSite01"
-$FTPsitePath = "d:\dms-data\ftp-root\SDMSC1-FTPSite01"
+$FTPsitePath = "d:\dms-data\ftp-data\SDMSC1-FTPSite01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
 # $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
-$FTProotFolderpath = "d:\dms-data\ftp-root"
+# $FTProotFolderpath = "d:\dms-data\ftp-data"
 
 
 ################################################
@@ -359,6 +359,11 @@ $objShortCut.TargetPath="C:\Windows\explorer.exe"
 $objShortcut.Arguments = "d:\dms-data"
 $objShortCut.Save()
 
+$objShell = New-Object -ComObject ("WScript.Shell")
+$objShortCut = $objShell.CreateShortcut($env:USERPROFILE + "\Desktop" + "\DMS-FTP-data.lnk")
+$objShortCut.TargetPath="C:\Windows\explorer.exe"
+$objShortcut.Arguments = "d:\dms-data\ftp-data"
+$objShortCut.Save()
 
  
 ################################################
