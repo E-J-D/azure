@@ -321,27 +321,23 @@ if($FTPbasic -eq "yes"){
 
 
 ################################################
-## install update modules for Powershell
-################################################
-
-PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Install-Module -Name PSWindowsUpdate -Force
-Start-Sleep -s 2
-get-command -module PSWindowsUpdate
-Start-Sleep -s 2
-PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
-
-
-################################################
 ## install updates
 ################################################
 
 if($UPDATE -eq "yes"){
 
 	# Install all pending Updates and restart without asking
+	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+	Start-Sleep -s 2
+	Install-Module -Name PSWindowsUpdate -Force
+	Start-Sleep -s 2
+	get-command -module PSWindowsUpdate
+	Start-Sleep -s 2
+	PrintJobDone "PSWindowsUpdate modul for PowerS installed"
+	Start-Sleep -s 2
+	Clear-Host []
 	PrintJobToDo "Install all pending updates"
-	stop-transcript
 	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
 	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 	PrintJobDone "all updates installed"
