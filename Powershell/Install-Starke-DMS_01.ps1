@@ -27,6 +27,16 @@ Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following ins
 ## command line parameter definition 
 #######################################
 
+##############################
+##############################
+### 07.12.2022
+### D:\dms-data\ftp-log Verzeichnis muss gesetzt werden
+### 
+##############################
+##############################
+
+
+
 param (
 	[string]$FTPserver = '172.28.0.11',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
@@ -484,6 +494,7 @@ if($FTP -eq "yes"){
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.controlChannelPolicy -Value "SslAllow" 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslAllow" 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.authentication.basicAuthentication.enabled -Value $true 
+	Set-ItemProperty $FTPsiteFull -Name ftpServer.logFile.directory -Value D:\dms-data\ftp-log
 
 	Add-WebConfiguration "/system.ftpServer/security/authorization" -Location $FTPsiteShort -PSPath IIS:\ -Value @{accessType="Allow";roles=$FTPgroup;permissions="Read,Write"} 
 

@@ -22,7 +22,22 @@ dir
 
 # PRODUCTIVE environment (15.11.2022)
 =====================================
-.\Install-Starke-DMS_01.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999'
+.\Install-Starke-DMS_00.ps1 `
+    -FTPserver '172.28.0.11' `
+	-FTPuser 'AUTOINSTALLER' `
+	-FTPpass 'wbutJzGFALFDrtmN' `
+	-customerno '57999'
+
+cd c:\install
+dir
+.\Install-Starke-DMS_01.ps1 `
+    -FTPserver '172.28.0.11' `
+	-FTPuser 'AUTOINSTALLER' `
+	-FTPpass 'wbutJzGFALFDrtmN' `
+	-UPDATE 'yes' `
+	-customerno '57999'
+
+
 
 # VMware lokal test environment (22.11.2022)
 =====================================
