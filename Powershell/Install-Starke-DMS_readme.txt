@@ -56,6 +56,21 @@ dir
 	-UPDATE 'yes' `
 	-customerno '57999'
 
+cd c:\install
+dir
+.\Install-Starke-DMS_02.ps1 `
+	-FTPserver '192.168.224.188' `
+	-FTPuser 'hausmeister' `
+	-FTPpass 'hausmeister' `
+	-customerno '57999' `
+	-LIZuser 'dockersetup' `
+	-LIZpass 'S3VyendlaWwgUmV2aXZhbCBiZXdlaXNlbiE' `
+	-LIZserver 'https://starke-dms-license.azurewebsites.net' `
+	-LIZuid '{7666BBC5-7C53-4B17-9444-1CB0B707AF5C}' `
+	-LIZtargetdir 'd:\dms-config' `
+	-saPass 'saAdmin00!' `
+	-UPDATE 'yes'
+
 
 #####################################
 #####################################
