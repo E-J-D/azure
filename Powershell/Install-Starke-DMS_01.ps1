@@ -600,21 +600,26 @@ if($SSH -eq "yes"){
 	Stop-Service sshd
 	Remove-Item 'C:\ProgramData\SSH\sshd_config'
 	
-	$SSHUserName = 'SSH-TEST'
+	$SSHUserNameMatch = "Match User "
+	$SSHUserNameString = $SSHUserNameMatch +$SSHUserName
+	$SSHsitePathMatch = "   ChrootDirectory "
+	$SSHsitePathString = $SSHsitePathMatch +$SSHsitePath
 	'# ssh_config file created by SDMS cloud installer', `
 	'Port 22', `
-	'Subsystem	sftp	sftp-server.exe', `
+	'Subsystem  sftp   sftp-server.exe', `
 	'AllowGroups SSHGroup', `
 	'AuthenticationMethods password', `
-	'ChrootDirectory D:\dms-data\ssh-data', `
-	'Match User $SSHUserName', `
-	'	AllowTcpForwarding no', `
-	'	ChrootDirectory D:\dms-data\ssh-data\test', `
-	'	ForceCommand internal-sftp', `
-	'	PermitTunnel no', `
-	'	AllowAgentForwarding no', `
-	'	X11Forwarding no' | `
+	'ChrootDirectory D:\dms-data\file-exchange', `
+	$SSHUserNameString, `
+	'   AllowTcpForwarding no', `
+	    $SSHsitePathString , `
+	'   ForceCommand internal-sftp', `
+	'   PermitTunnel no', `
+	'   AllowAgentForwarding no', `
+	'   X11Forwarding no' | `
 	out-file C:\ProgramData\SSH\sshd_config
+
+	Start-Service sshd
 
 	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
 	# Font Ivrit
