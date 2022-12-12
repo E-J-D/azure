@@ -135,13 +135,13 @@ Start-Sleep -s 1
 ## Parameter for FTP server install ##
 ######################################
 
-$FTPsiteFull = "IIS:\Sites\SDMSC1-FTPSite01"
-$FTPsiteShort = "SDMSC1-FTPSite01"
-$FTPsitePath = "d:\dms-data\ftp-root\SDMSC1-FTPSite01"
+$FTPsiteFull = "IIS:\Sites\FTP-Site01"
+$FTPsiteShort = "FTP-Site01"
+$FTPsitePath = "d:\dms-data\file-exchange\FTP-Site01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
 # $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
-$FTProotFolderpath = "d:\dms-data\ftp-root"
+# $FTProotFolderpath = "d:\dms-data\file-exchange"
 
 
 ################################################
@@ -261,7 +261,8 @@ New-Item -Path "d:\dms-data" -Name "preview" -ItemType "directory"
 New-Item -Path "d:\dms-data" -Name "backup" -ItemType "directory"
 New-Item -Path "d:\dms-data" -Name "sql" -ItemType "directory"
 New-Item -Path "d:\dms-data" -Name "ftp-log" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "ftp-data" -ItemType "directory"
+New-Item -Path "d:\dms-data" -Name "file-exchange" -ItemType "directory"
+New-Item -Path "d:\dms-data" -Name "web-logs" -ItemType "directory"
 New-Item -Path "d:\dms-data\backup" -Name "sql" -ItemType "directory"
 New-Item -Path "d:\" -Name "tools" -ItemType "directory"
 New-Item -Path "d:\tools" -Name "ansible" -ItemType "directory"

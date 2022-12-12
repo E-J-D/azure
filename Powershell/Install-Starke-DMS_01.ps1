@@ -27,16 +27,6 @@ Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following ins
 ## command line parameter definition 
 #######################################
 
-##############################
-##############################
-### 07.12.2022
-### D:\dms-data\ftp-log Verzeichnis muss gesetzt werden
-### 
-##############################
-##############################
-
-
-
 param (
 	[string]$FTPserver = '172.28.0.11',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
@@ -45,6 +35,7 @@ param (
 
 	[string]$POWERSHELL7 = 'yes',
 	[string]$FTP = 'yes',
+	[string]$SSH = 'yes',
 	[string]$UPDATE = 'no',
 	[string]$ADMINUPDATE = 'yes'
 )
@@ -173,13 +164,25 @@ $password += Get-RandomCharacters -length 2 -characters '!"§$%&/()=?}][{@#*+'
 ## Parameter for FTP server install ##
 ######################################
 
-$FTPsiteFull = "IIS:\Sites\SDMSC1-FTPSite01"
-$FTPsiteShort = "SDMSC1-FTPSite01"
-$FTPsitePath = "d:\dms-data\ftp-data\SDMSC1-FTPSite01"
+$FTPsiteFull = "IIS:\Sites\FTP-Site01"
+$FTPsiteShort = "FTP-Site01"
+$FTPsitePath = "d:\dms-data\file-exchange\FTP-Site01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
 # $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
-# $FTProotFolderpath = "d:\dms-data\ftp-data"
+# $FTProotFolderpath = "d:\dms-data\file-exchange"
+
+
+######################################
+## Parameter for SSH server install ##
+######################################
+
+$SSHsiteFull = "IIS:\Sites\SSH-Site01"
+$SSHsiteShort = "SSH-Site01"
+$SSHsitePath = "d:\dms-data\file-exchange\SSH-Site01"
+$SSHuserName = "SDMSC1-SSH01-"+$customerno
+# $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
+$SSHgroup = "SSHGroup"
 
 
 ################################################
@@ -370,9 +373,9 @@ $objShortcut.Arguments = "d:\dms-data"
 $objShortCut.Save()
 
 $objShell = New-Object -ComObject ("WScript.Shell")
-$objShortCut = $objShell.CreateShortcut($env:USERPROFILE + "\Desktop" + "\DMS-FTP-data.lnk")
+$objShortCut = $objShell.CreateShortcut($env:USERPROFILE + "\Desktop" + "\DMS-file-exchange.lnk")
 $objShortCut.TargetPath="C:\Windows\explorer.exe"
-$objShortcut.Arguments = "d:\dms-data\ftp-data"
+$objShortcut.Arguments = "d:\dms-data\file-exchange"
 $objShortCut.Save()
 
  
@@ -558,6 +561,102 @@ if($FTP -eq "yes"){
 	PrintJobError "FTP server not installed"
 	Start-Sleep -s 3
 }
+
+
+################################################
+## install SSH server
+################################################
+# http://woshub.com/installing-sftp-ssh-ftp-server-on-windows-server-2012-r2/
+# https://adamtheautomator.com/openssh-windows/
+
+if($SSH -eq "yes"){
+	PrintJobToDo "installing SSH server"
+
+	Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+	Start-Sleep -s 3
+	Set-Service -Name sshd -StartupType 'Automatic'
+	Start-Sleep -s 3
+	Start-Service sshd
+	Start-Sleep -s 2
+	New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName SSH
+
+	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=1
+	$sshpassword = Scramble-String $password
+	$SSHUserPassword = ConvertTo-SecureString $sshpassword -AsPlainText -Force
+	New-LocalUser -Name $SSHuserName `
+	-FullName "Starke-DMS Cloud 1.0 FileXchange user" `
+	-Description "SSH user" `
+	-Password $SSHUserPassword `
+	-PasswordNeverExpires `
+	-AccountNeverExpires
+
+	New-LocalGroup -Name $SSHGroup
+	Add-LocalGroupMember -Group $SSHGroup -Member $SSHUserName 
+
+	mkdir $SSHsitePath 
+
+	icacls $SSHsitePath /grant "SSHGroup:(OI)(CI)(F)" 
+
+	Stop-Service sshd
+	Remove-Item 'C:\ProgramData\SSH\sshd_config'
+	
+	$SSHUserName = 'SSH-TEST'
+	'# ssh_config file created by SDMS cloud installer', `
+	'Port 22', `
+	'Subsystem	sftp	sftp-server.exe', `
+	'AllowGroups SSHGroup', `
+	'AuthenticationMethods password', `
+	'ChrootDirectory D:\dms-data\ssh-data', `
+	'Match User $SSHUserName', `
+	'	AllowTcpForwarding no', `
+	'	ChrootDirectory D:\dms-data\ssh-data\test', `
+	'	ForceCommand internal-sftp', `
+	'	PermitTunnel no', `
+	'	AllowAgentForwarding no', `
+	'	X11Forwarding no' | `
+	out-file C:\ProgramData\SSH\sshd_config
+
+	# https://patorjk.com/software/taag/#p=display&f=Ivrit&t=Starke-DMS%0ACloud%20Installer
+	# Font Ivrit
+	'-------------------------------------------------------------------', `
+	'  ____  _             _              ____  __  __ ____             ', `
+	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
+	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
+	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
+	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
+	'   ____ _                 _   ___           _        _ _           ', `
+	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
+	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
+	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
+	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
+	'                                                                   ', `
+	'-------------------------------------------------------------------', `
+	'New SSH name and password', `
+	'-------------------------------------------------------------------', `
+	'Host: '+$ENV:COMPUTERNAME, `
+	'-------------------------------------------------------------------', `
+	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
+	'-------------------------------------------------------------------', `
+	'new SSH user:', `
+	$SSHuserName, `
+	'-------------------------------------------------------------------', `
+	'new password:', `
+	$SSHpassword, `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------', `
+	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------'  | `
+	out-file $env:USERPROFILE\Desktop\ssh_password_username.txt
+
+	PrintJobDone "SSH server installed and configured"
+
+}else {
+	PrintJobError "SSH server not installed"
+	Start-Sleep -s 3
+}
+
+
 
 
 ################################################
