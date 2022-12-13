@@ -9,6 +9,7 @@ Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following ins
 
 -POWERSHELL7 # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
 -FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
+-SSH         # add with "no" for not installing the SSH feature - mainly for testing / -SSH 'no'
 -UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 #>
@@ -25,8 +26,8 @@ param (
 
 	[string]$POWERSHELL7 = 'yes',
 	[string]$FTP = 'yes',
-	[string]$SSH = 'yes',
-	[string]$UPDATE = 'no',
+	[string]$SSH = 'no',
+	[string]$UPDATE = 'yes',
 	[string]$ADMINUPDATE = 'yes'
 )
 
@@ -553,12 +554,38 @@ if($FTP -eq "yes"){
 ################################################
 ## install SSH server
 ################################################
-# http://woshub.com/installing-sftp-ssh-ftp-server-on-windows-server-2012-r2/
 # https://adamtheautomator.com/openssh-windows/
+# (http://woshub.com/installing-sftp-ssh-ftp-server-on-windows-server-2012-r2/)
+
 
 if($SSH -eq "yes"){
 	PrintJobToDo "installing SSH server"
 
+	## Set network connection protocol to TLS 1.2
+	## Define the OpenSSH latest release url
+	$url = 'https://github.com/PowerShell/Win32-OpenSSH/releases/latest/'
+	## Create a web request to retrieve the latest release download link
+	$request = [System.Net.WebRequest]::Create($url)
+	$request.AllowAutoRedirect=$false
+	$response=$request.GetResponse()
+	$source = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
+	## Download the latest OpenSSH for Windows package to the current working directory
+	$webClient = [System.Net.WebClient]::new()
+	$webClient.DownloadFile($source, (Get-Location).Path + '\OpenSSH-Win64.zip')
+	# Extract the ZIP to a temporary location
+	 Expand-Archive -Path .\OpenSSH-Win64.zip -DestinationPath ($env:temp) -Force
+	# Move the extracted ZIP contents from the temporary location to C:\Program Files\OpenSSH\
+	Move-Item "$($env:temp)\OpenSSH-Win64" -Destination "C:\Program Files\OpenSSH\" -Force
+	# Unblock the files in C:\Program Files\OpenSSH\
+	Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
+	& 'C:\Program Files\OpenSSH\install-sshd.ps1'
+	## changes the sshd service's startup type from manual to automatic.
+	Set-Service sshd -StartupType Automatic
+	## starts the sshd service.
+	Start-Service sshd
+	New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+
+	<#
 	Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 	Start-Sleep -s 3
 	Set-Service -Name sshd -StartupType 'Automatic'
@@ -566,6 +593,7 @@ if($SSH -eq "yes"){
 	Start-Service sshd
 	Start-Sleep -s 2
 	New-NetFirewallRule -Protocol TCP -LocalPort 22 -Direction Inbound -Action Allow -DisplayName SSH
+	#>
 
 	# https://www.server-world.info/en/note?os=Windows_Server_2019&p=initial_conf&f=1
 	$sshpassword = Scramble-String $password
@@ -598,13 +626,17 @@ if($SSH -eq "yes"){
 	'AuthenticationMethods password', `
 	'ChrootDirectory D:\dms-data\file-exchange', `
 	$SSHUserNameString, `
+	# PermitTTY no
+	# DenyGroups Administrators
+	# SyslogFacility LOCAL0
+	# LogLevel Debug3
 	'   AllowTcpForwarding no', `
 	    $SSHsitePathString , `
 	'   ForceCommand internal-sftp', `
 	'   PermitTunnel no', `
 	'   AllowAgentForwarding no', `
 	'   X11Forwarding no' | `
-	out-file C:\ProgramData\SSH\sshd_config
+	out-file C:\ProgramData\SSH\sshd_config -Encoding utf8
 
 	Start-Service sshd
 
