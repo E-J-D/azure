@@ -1,4 +1,4 @@
-﻿<# 06.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 13.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
 
@@ -10,14 +10,6 @@ Install-Starke-DMS_00.ps1 basic settings and OS update
 -FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
 -UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
-
-
-==> NFR environment
-.\Install-Starke-DMS_00.ps1 -FTPserver 'ftp.get--it.de' -FTPuser 'get--IT' -FTPpass 'get--IT2022' -customerno '50999'  
-.\Install-Starke-DMS_00.ps1 -FTPserver '172.28.0.11' -FTPuser 'AUTOINSTALLER' -FTPpass 'wbutJzGFALFDrtmN' -customerno '57999'  
-
-==> VMware lokal test environment (22.11.2022)
-.\Install-Starke-DMS_00.ps1 -FTPserver '192.168.224.188' -FTPuser 'hausmeister' -FTPpass 'hausmeister' -customerno '36100'
 #>
 
 #######################################
@@ -25,7 +17,7 @@ Install-Starke-DMS_00.ps1 basic settings and OS update
 #######################################
 
 param (
-	[string]$FTPserver = '172.28.0.11',
+	[string]$FTPserver = 'ftp.get--it.de',
 	[Parameter(Mandatory=$true)][string]$FTPuser,
 	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno,

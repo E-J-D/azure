@@ -11,6 +11,8 @@ Write-Host -ForegroundColor Yellow "############################################
 Write-Host
 # pause
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Start-Sleep -s 2
 Install-Module -Name PSWindowsUpdate -Force
 Start-Sleep -s 2
 get-command -module PSWindowsUpdate
