@@ -17,9 +17,6 @@ Install-Starke-DMS_00.ps1 basic settings and OS update
 #######################################
 
 param (
-	[string]$FTPserver = 'ftp.get--it.de',
-	[Parameter(Mandatory=$true)][string]$FTPuser,
-	[Parameter(Mandatory=$true)][string]$FTPpass,
 	[Parameter(Mandatory=$true)][string]$customerno,
 
 	[string]$FTPbasic = 'yes',
@@ -131,9 +128,7 @@ $FTPsiteFull = "IIS:\Sites\FTP-Site01"
 $FTPsiteShort = "FTP-Site01"
 $FTPsitePath = "d:\dms-data\file-exchange\FTP-Site01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
-# $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
-# $FTProotFolderpath = "d:\dms-data\file-exchange"
 
 
 ################################################

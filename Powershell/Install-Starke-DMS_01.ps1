@@ -167,11 +167,8 @@ $FTPgroup = "FTPGroup"
 ## Parameter for SSH server install ##
 ######################################
 
-$SSHsiteFull = "IIS:\Sites\SSH-Site01"
-$SSHsiteShort = "SSH-Site01"
 $SSHsitePath = "d:\dms-data\file-exchange\SSH-Site01"
 $SSHuserName = "SDMSC1-SSH01-"+$customerno
-# $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $SSHgroup = "SSHGroup"
 
 
@@ -751,6 +748,7 @@ PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_02.ps1"
 ################################################
 
 Notepad $env:USERPROFILE\Desktop\ftp_password_username.txt 
+Notepad $env:USERPROFILE\Desktop\ssh_password_username.txt
 
 if($ADMINUPDATE -eq "yes"){
 	Notepad $env:USERPROFILE\Desktop\admin_password_username.txt 
