@@ -625,11 +625,10 @@ if($SSH -eq "yes"){
 	'AllowGroups SSHGroup', `
 	'AuthenticationMethods password', `
 	'ChrootDirectory D:\dms-data\file-exchange', `
+	'DenyGroups Administrators', `
+	'SyslogFacility LOCAL0', `
+	'LogLevel Debug1', `
 	$SSHUserNameString, `
-	# PermitTTY no
-	# DenyGroups Administrators
-	# SyslogFacility LOCAL0
-	# LogLevel Debug3
 	'   AllowTcpForwarding no', `
 	    $SSHsitePathString , `
 	'   ForceCommand internal-sftp', `
