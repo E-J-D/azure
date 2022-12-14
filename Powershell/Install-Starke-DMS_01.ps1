@@ -1,6 +1,6 @@
-﻿<# 13.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
-Install-Starke-DMS_01.ps1 install PowerShell 7 which is needed for following installation
-=========================================================================================
+﻿<# 14.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+Install-Starke-DMS_01.ps1 installs PowerShell 7 which is needed for following installation
+==========================================================================================
 
 -FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
 -FTPuser     # name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
@@ -159,9 +159,7 @@ $FTPsiteFull = "IIS:\Sites\FTP-Site01"
 $FTPsiteShort = "FTP-Site01"
 $FTPsitePath = "d:\dms-data\file-exchange\FTP-Site01"
 $FTPuserName = "SDMSC1-FTP01-"+$customerno
-# $FTPUserPassword = ConvertTo-SecureString $ftppassword -AsPlainText -Force
 $FTPgroup = "FTPGroup"
-# $FTProotFolderpath = "d:\dms-data\file-exchange"
 
 
 ######################################
@@ -186,95 +184,6 @@ Start-Sleep -s 3
 
 $ErrorActionPreference = "Stop"
 
-
-################################################
-################################################
-## let's beginn
-################################################
-################################################
-
-<#
-PrintJobToDo "set default OS settings"
-Start-Sleep -s 1
-
-
-##################################################
-## disable autostart of Windows server-manager
-##################################################
-
-Invoke-Command -ComputerName localhost -ScriptBlock { New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value "0x1" –Force} 
-
-
-##################################################
-## basic explorer settings
-##################################################
-
-# "file extension on"
-Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -value "0"
-
-# "menus always on"
-Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "AlwaysShowMenus" -value "1"
-
-# "show status bar"
-Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowStatusBar" -value "1"
-
-# show full path"
-# Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" -Name "FullPath" -value "1"
-
-# "show all folder"
-Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneShowAllFolders" -value "1"
-
-# "expand path"
-Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneExpandToCurrentFolder" -value "1"
-
-
-##################################################
-## set language to de-DE
-##################################################
-
-Set-WinUILanguageOverride -Language de-DE
-Set-Culture de-DE
-Set-WinUserLanguageList de-DE -Force
-
-
-################################################
-## rename computer to $customerno
-################################################
-
-Rename-Computer -NewName SDMSC1-$customerno
-
-
-################################################
-## terracloud standard server with two hdd+dvd
-## dvd is drive d: and second hdd is e: 
-## must be second hdd d: and dvd e:
-## change DVD drive temporaly letter to O:
-################################################
-
-Get-WmiObject -Class Win32_volume -Filter 'DriveType=5' |
-  Select-Object -First 1 |
-  Set-WmiInstance -Arguments @{DriveLetter='O:'}
-
-$Drive = Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'E:'"
-$Drive | Set-CimInstance -Property @{DriveLetter ='D:'}
-
-Get-WmiObject -Class Win32_volume -Filter 'DriveType=5' |
-  Select-Object -First 1 |
-  Set-WmiInstance -Arguments @{DriveLetter='E:'}
-
-# label c: to "OS", d: to "data"
-$Drive = Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'C:'"
-$Drive | Set-CimInstance -Property @{Label='OS'}
-Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'C:'" |
-  Select-Object -Property SystemName, Label, DriveLetter
-
-$Drive = Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'D:'"
-$Drive | Set-CimInstance -Property @{Label='DATA'}
-Get-CimInstance -ClassName Win32_Volume -Filter "DriveLetter = 'D:'" |
-  Select-Object -Property SystemName, Label, DriveLetter
-
-PrintJobDone "default OS settings done"
-#>
 
 ################################################
 ## Download section
@@ -405,29 +314,6 @@ PrintJobToDo "Remove Internet Explorer"
 Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart
 PrintJobDone "Internet Explorer removed"
 
-<#
-################################################
-## create media structure
-################################################
-PrintJobToDo "creating media structur"
-
-New-Item -Path "d:\" -Name "dms-data" -ItemType "directory"
-New-Item -Path "d:\" -Name "dms-config" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "documents" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "mail" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "pdf-converted" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "pool" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "preview" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "backup" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "sql" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "ftp-log" -ItemType "directory"
-New-Item -Path "d:\dms-data" -Name "ftp-data" -ItemType "directory"
-New-Item -Path "d:\dms-data\backup" -Name "sql" -ItemType "directory"
-New-Item -Path "d:\" -Name "tools" -ItemType "directory"
-New-Item -Path "d:\tools" -Name "ansible" -ItemType "directory"
-
-PrintJobDone "media structur created"
-#>
 
 ################################################
 ## install FTP server
@@ -505,7 +391,6 @@ if($FTP -eq "yes"){
 	# Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.dataChannelPolicy -Value "SslRequire" 
 
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertStoreName -Value "My" 
-	#Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value (Get-ChildItem -path cert:\LocalMachine\My | Where-Object -Property Subject -like "CN=*").Thumbprint
 	Set-ItemProperty $FTPsiteFull -Name ftpServer.security.ssl.serverCertHash -Value $SSLCERT.thumbprint
 		
 	Remove-Item C:\inetpub\ -recurse
@@ -556,7 +441,6 @@ if($FTP -eq "yes"){
 ################################################
 # https://adamtheautomator.com/openssh-windows/
 # (http://woshub.com/installing-sftp-ssh-ftp-server-on-windows-server-2012-r2/)
-
 
 if($SSH -eq "yes"){
 	PrintJobToDo "installing SSH server"
@@ -779,9 +663,9 @@ PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_02.ps1"
 ################################################
 
 Notepad $env:USERPROFILE\Desktop\ftp_password_username.txt 
-Notepad $env:USERPROFILE\Desktop\ssh_password_username.txt
 
 if($ADMINUPDATE -eq "yes"){
 	Notepad $env:USERPROFILE\Desktop\admin_password_username.txt 
-}else {
+}elseif($SSH -eq "yes"){
+	Notepad $env:USERPROFILE\Desktop\ssh_password_username.txt 
 }

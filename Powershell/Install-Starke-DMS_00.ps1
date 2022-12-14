@@ -1,4 +1,4 @@
-﻿<# 13.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 14.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
 
