@@ -195,6 +195,7 @@ PrintJobToDo "downloading the stuff"
 $files_PS		= "PowerShell-7.2.7-win-x64.msi"
 $files_NPP		= "npp.8.4.7.Installer.x64.exe"
 $files_EDGE		= "MicrosoftEdgeEnterpriseX64.msi"
+$files_SSH		= "OpenSSH-Win64-v9.1.0.0.msi"
 
 # Create an array of files
 $files = @($files_PS,$files_NPP,$files_EDGE)
@@ -216,7 +217,8 @@ PrintJobDone "download finished"
 if($POWERSHELL7 -eq "yes"){
 	# run the PowerShell7 installer in silent mode
 	PrintJobToDo "installing PowerShell 7"
-	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
+	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\$files_PS -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
+#	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\PowerShell-7.2.7-win-x64.msi -ArgumentList "/quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ENABLE_PSREMOTING=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
 	
 	# create desktop shortcut for PowerShell 7 and run always as administrator
 	$objShell = New-Object -ComObject ("WScript.Shell")
@@ -445,6 +447,7 @@ if($FTP -eq "yes"){
 if($SSH -eq "yes"){
 	PrintJobToDo "installing SSH server"
 
+	<#
 	## Set network connection protocol to TLS 1.2
 	## Define the OpenSSH latest release url
 	$url = 'https://github.com/PowerShell/Win32-OpenSSH/releases/latest/'
@@ -463,13 +466,22 @@ if($SSH -eq "yes"){
 	# Unblock the files in C:\Program Files\OpenSSH\
 	Get-ChildItem -Path "C:\Program Files\OpenSSH\" | Unblock-File
 	& 'C:\Program Files\OpenSSH\install-sshd.ps1'
+	# Add openSSH to path variable
+	[Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path",[System.EnvironmentVariableTarget]::Machine) + ';' + ${Env:ProgramFiles} + '\OpenSSH', [System.EnvironmentVariableTarget]::Machine)
 	## changes the sshd service's startup type from manual to automatic.
 	Set-Service sshd -StartupType Automatic
 	## starts the sshd service.
 	Start-Service sshd
 	New-NetFirewallRule -Name sshd -DisplayName 'Allow SSH' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+	#>
+
+	Start-Sleep -s 3
+	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\$files_SSH
+	#  Start-Process -wait -FilePath  .\OpenSSH-Win64-v9.1.0.0.msi
+	Start-Sleep -s 3
 
 	<#
+	Start-Sleep -s 3
 	Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 	Start-Sleep -s 3
 	Set-Service -Name sshd -StartupType 'Automatic'
