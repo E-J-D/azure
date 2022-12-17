@@ -26,7 +26,7 @@ param (
 
 	[string]$POWERSHELL7 = 'yes',
 	[string]$FTP = 'yes',
-	[string]$SSH = 'no',
+	[string]$SSH = 'yes',
 	[string]$UPDATE = 'yes',
 	[string]$ADMINUPDATE = 'yes'
 )
@@ -302,7 +302,7 @@ PrintJobDone "PS7 module sqlserver installed"
 ## install Notepad++ in silent mode
 ################################################
 PrintJobToDo "installing Notepad++"
-Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\npp.8.4.7.Installer.x64.exe' -ArgumentList /S -PassThru
+Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\$files_NPP' -ArgumentList /S -PassThru
 PrintJobDone "Notepad++ installed"
 
 
@@ -310,7 +310,7 @@ PrintJobDone "Notepad++ installed"
 ## install Microsoft Edge in silent mode
 ################################################
 PrintJobToDo "installing Microsoft Edge"
-Start-Process -wait -FilePath C:\install\StarkeDMS-latest\MicrosoftEdgeEnterpriseX64.msi -ArgumentList "/quiet"
+Start-Process -wait -FilePath C:\install\StarkeDMS-latest\$files_EDGE -ArgumentList "/quiet"
 PrintJobDone "Microsoft Edge installed"
 PrintJobToDo "Remove Internet Explorer"
 Disable-WindowsOptionalFeature -FeatureName Internet-Explorer-Optional-amd64 -Online -NoRestart
