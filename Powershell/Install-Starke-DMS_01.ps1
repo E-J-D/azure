@@ -198,7 +198,7 @@ $files_EDGE		= "MicrosoftEdgeEnterpriseX64.msi"
 $files_SSH		= "OpenSSH-Win64-v9.1.0.0.msi"
 
 # Create an array of files
-$files = @($files_PS,$files_NPP,$files_EDGE)
+$files = @($files_PS,$files_NPP,$files_EDGE,$files_SSH)
 
 # Perform iteration to download the files to server
 foreach ($i in $files) {
@@ -302,7 +302,7 @@ PrintJobDone "PS7 module sqlserver installed"
 ## install Notepad++ in silent mode
 ################################################
 PrintJobToDo "installing Notepad++"
-Start-Process -Wait -FilePath 'C:\install\StarkeDMS-latest\$files_NPP' -ArgumentList /S -PassThru
+Start-Process -Wait -FilePath C:\install\StarkeDMS-latest\$files_NPP -ArgumentList /S -PassThru
 PrintJobDone "Notepad++ installed"
 
 
@@ -477,7 +477,7 @@ if($SSH -eq "yes"){
 
 	Start-Sleep -s 3
 	Start-Process -wait -FilePath C:\install\StarkeDMS-latest\$files_SSH
-	#  Start-Process -wait -FilePath  .\OpenSSH-Win64-v9.1.0.0.msi
+		#  Start-Process -wait -FilePath  .\OpenSSH-Win64-v9.1.0.0.msi
 	Start-Sleep -s 3
 
 	<#
