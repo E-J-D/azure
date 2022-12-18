@@ -1,4 +1,4 @@
-﻿<# 14.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 18.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
 
@@ -294,13 +294,16 @@ if($UPDATE -eq "yes"){
 
 	# Install all pending Updates and restart without asking
 	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+	# https://petri.com/how-to-manage-windows-update-using-powershell/
+	#$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0"
+	#Install-WUUpdates -Updates $Updates
 	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 	Start-Sleep -s 2
 	Install-Module -Name PSWindowsUpdate -Force
 	Start-Sleep -s 2
-	get-command -module PSWindowsUpdate
+	Get-Command -Module PSWindowsUpdate
 	Start-Sleep -s 2
-	PrintJobDone "PSWindowsUpdate modul for PowerS installed"
+	PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
 	Start-Sleep -s 2
 	Clear-Host []
 	PrintJobToDo "Install all pending updates"
