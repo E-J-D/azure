@@ -298,11 +298,13 @@ if($UPDATE -eq "yes"){
 	#$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0"
 	#Install-WUUpdates -Updates $Updates
 	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-	Start-Sleep -s 2
+	Start-Sleep -s 3
+	Register-PSRepository -Default
+	Start-Sleep -s 3
 	Install-Module -Name PSWindowsUpdate -Force
-	Start-Sleep -s 2
+	Start-Sleep -s 3
 	Get-Command -Module PSWindowsUpdate
-	Start-Sleep -s 2
+	Start-Sleep -s 3
 	PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
 	Start-Sleep -s 2
 	Clear-Host []
