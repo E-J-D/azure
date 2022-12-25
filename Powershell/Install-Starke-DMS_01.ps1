@@ -575,7 +575,11 @@ if($SSH -eq "yes"){
 	Start-Sleep -s 3
 }
 
-
+################################################
+## stop the transcript
+################################################
+stop-transcript
+Clear-Host []
 
 
 ################################################
@@ -664,8 +668,6 @@ if($ADMINUPDATE -eq "yes"){
 ## we're done
 ################################################
 
-stop-transcript
-Clear-Host []
 PrintJobDone "Install-Starke-DMS_01.ps1 finished"
 Start-Sleep -s 5
 PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_02.ps1"
