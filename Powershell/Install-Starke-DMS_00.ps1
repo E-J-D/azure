@@ -292,15 +292,22 @@ if($FTPbasic -eq "yes"){
 
 if($UPDATE -eq "yes"){
 
+
+	# 25.12.2022 tried to fix "Install-Module -Name PSWindowsUpdate -Force" error
+	# Get-PSRepository
+	# [Net.ServicePoint.Manager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
+	# [System.Net.WebRequest]::DefaultWebProxy = [System.Net.WebRequest]::GetSystemWebProxy()
+	# [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+	# 
 	# Install all pending Updates and restart without asking
 	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
 	# https://petri.com/how-to-manage-windows-update-using-powershell/
 	#$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0"
 	#Install-WUUpdates -Updates $Updates
 	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-	Start-Sleep -s 3
-	Register-PSRepository -Default
-	Start-Sleep -s 3
+	Start-Sleep -s 5
+	#egister-PSRepository -Default
+	#tart-Sleep -s 3
 	Install-Module -Name PSWindowsUpdate -Force
 	Start-Sleep -s 3
 	Get-Command -Module PSWindowsUpdate
