@@ -184,6 +184,17 @@ Clear-Host []
 
 
 ################################################
+## delete old DMS_11_WebApache service
+################################################
+
+PrintJobToDo "deleting old DMS_11_WebApache service"
+Remove-Service -Name DMS_11_WebApache
+PrintJobDone "old DMS_11_WebApache service deleted"
+Start-Sleep -s 2
+Clear-Host []
+
+
+################################################
 ## unzip new version
 ################################################
 
@@ -191,6 +202,24 @@ PrintJobToDo "unzipping archives"
 Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\WebApache.zip -DestinationPath d:\tools
 Remove-Item C:\install\StarkeDMS-latest\WebApache.zip
 PrintJobDone "archives unzipped"
+Start-Sleep -s 2
+Clear-Host []
+
+
+#####################################################################################
+# DMS WebApache service install and start - 11
+# ----------------------------------
+PrintJobToDo "DMS WebApache service will be installed"
+
+# '[DMSServer]','Server=localhost','Port=27244','[SSL]','Use=False' | out-file d:\dms-config\DMSWebServer.ini
+
+Start-Process -Wait -FilePath 'd:\Tools\Apache24\bin\httpd.exe' -ArgumentList '-k install -n "DMS_11_WebApache" -f "d:\Tools\Apache24\conf\httpd.conf"'
+
+Start-Sleep -s 1
+Start-Service -Name "DMS_11_WebApache"
+Start-Sleep -s 3
+
+PrintJobDone "DMS WebApache service installed"
 Start-Sleep -s 2
 Clear-Host []
 
