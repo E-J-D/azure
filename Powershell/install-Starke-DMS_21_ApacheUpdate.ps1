@@ -201,7 +201,7 @@ Clear-Host []
 PrintJobToDo "unzipping archives"
 Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\WebApache.zip -DestinationPath d:\tools
 Remove-Item C:\install\StarkeDMS-latest\WebApache.zip
-New-Item -Path "d:\dms-data" -Name "web-logs" -ItemType "directory"
+#New-Item -Path "d:\dms-data" -Name "web-logs" -ItemType "directory"
 PrintJobDone "archives unzipped"
 Start-Sleep -s 2
 Clear-Host []
