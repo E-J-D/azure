@@ -20,6 +20,7 @@ EXAMPLES FOR INSTALLATION STRINGS
 #####################################
 
 PART 1 OF 3
+Set-Location -Path 'c:\install'
 .\Install-Starke-DMS_00.ps1 -customerno '12345'
 
 PART 2 OF 3
@@ -42,3 +43,12 @@ Set-Location -Path 'c:\install'
 	-LIZtargetdir 'd:\dms-config' `
 	-saPass 'sapassword' `
 	-UPDATE 'yes'
+
+#####################################
+#####################################
+
+PART - APACHE UPDATE
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/install-Starke-DMS_21_ApacheUpdate.ps1" --output c:\install\install-Starke-DMS_21_ApacheUpdate.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
+Set-Location -Path 'c:\install'
+dir
+.\Install-Starke-DMS_21_ApacheUpdate.ps1
