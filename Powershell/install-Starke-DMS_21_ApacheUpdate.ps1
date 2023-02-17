@@ -177,7 +177,6 @@ Clear-Host []
 ################################################
 
 PrintJobToDo "deleting old version"
-Expand-Archive -LiteralPath C:\install\StarkeDMS-latest\WebApache.zip -DestinationPath d:\tools
 Remove-Item d:\tools\Apache24 -Recurse
 PrintJobDone "old version deleted"
 Start-Sleep -s 2

@@ -51,4 +51,7 @@ PART - APACHE UPDATE
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/install-Starke-DMS_21_ApacheUpdate.ps1" --output c:\install\install-Starke-DMS_21_ApacheUpdate.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 Set-Location -Path 'c:\install'
 dir
-.\Install-Starke-DMS_21_ApacheUpdate.ps1
+.\Install-Starke-DMS_21_ApacheUpdate.ps1 `
+	-FTPserver 'ftp-server-name' `
+	-FTPuser 'ftpusername' `
+	-FTPpass 'ftppassword' 
