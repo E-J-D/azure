@@ -575,6 +575,25 @@ if($SSH -eq "yes"){
 	Start-Sleep -s 3
 }
 
+
+<#
+################################################
+## create admin user for reseller
+################################################
+
+$resellerpassword = Scramble-String $password
+$RESELLERadminPassword = ConvertTo-SecureString $resellerpassword -AsPlainText -Force
+New-LocalUser -Name "MartinLange" `
+-FullName "Starke-DMS Cloud 1.0 reseller admin user" `
+-Description "Reseller admin user" `
+-Password $RESELLERadminPassword `
+-PasswordNeverExpires `
+-AccountNeverExpires 
+
+Add-LocalGroupMember -Group Administratoren -Member "MartinLange"
+#>
+
+
 ################################################
 ## stop the transcript
 ################################################
