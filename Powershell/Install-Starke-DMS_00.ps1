@@ -202,9 +202,24 @@ Rename-Computer -NewName SDMSC1-$customerno
 
 
 ################################################
+## create emergency admin user for rollout
+## this user will be deleted automatically
+## when rollout is complete
+################################################
+
+	New-LocalUser -Name "EmergencyAdmin" `
+	-FullName "Emergency Admin" `
+	-Description "Starke-DMS Cloud 1.0 Installer Emergency Admin" `
+	-Password (ConvertTo-SecureString "3&K>g%4&=k_{N8Lt" -AsPlainText -Force) `
+	-PasswordNeverExpires `
+	-AccountNeverExpires 
+	Add-LocalGroupMember -Group "Administratoren" -Member "EmergencyAdmin"
+
+
+################################################
 ## terracloud standard server with two hdd+dvd
 ## dvd is drive d: and second hdd is e: 
-## must be second hdd d: and dvd e:
+## must be: second hdd d: and dvd e:
 ## change DVD drive temporaly letter to O:
 ################################################
 
