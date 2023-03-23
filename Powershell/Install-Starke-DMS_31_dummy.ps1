@@ -20,7 +20,9 @@ https://blog.netwrix.de/2019/12/12/automatisieren-von-powershell-skripts-mit-der
 #>
 
 param (
-	[Parameter(Mandatory=$true)][string]$customerno
+	[Parameter(Mandatory=$true)][string]$customerno,
+    $p1,
+    $p2
 )
 
 #######################################
@@ -46,6 +48,7 @@ Start-Sleep -s 1
 $ErrorActionPreference = "Stop"
 
 
+<#
 ################################################
 ## create link on desktop - dummy action
 ################################################
@@ -71,3 +74,11 @@ $objShortCut = $objShell.CreateShortcut($env:USERPROFILE + "\Desktop" + "\ps-dum
 $objShortCut.TargetPath="C:\Windows\explorer.exe"
 $objShortcut.Arguments = "d:\ps-dummy.txt"
 $objShortCut.Save()
+#>
+
+
+($p1 + " " + $p2) | Out-File "d:\ps-dummy.txt" -Append
+
+Unregister-ScheduledTask -TaskName "run Install-Starke-DMS_31_dummy.ps1 at logon" -Confirm:$false
+
+# pause

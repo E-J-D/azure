@@ -1,4 +1,5 @@
 <# 21.02.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
+.\Install-Starke-DMS_31_createTasks.ps1 -customerno 99999 -p1 EIKE -p2 DOOSE
 ============================================================================
 
 -FTPserver 		# specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
@@ -16,9 +17,13 @@
 -UPDATE			# add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 #>
 
+
 param (
-	[Parameter(Mandatory=$true)][string]$customerno
+	$customerno,
+    $p1,
+    $p2
 )
+
 
 #######################################
 ## generate timestamp
@@ -47,12 +52,17 @@ $ErrorActionPreference = "Stop"
 ## create the windows task
 ################################################
 
-[string]$TaskName = "Start Install-Starke-DMS_00.ps1"
+[string]$TaskName = "run Install-Starke-DMS_31_dummy.ps1 at logon"
 [string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
 [string]$TaskDir = "\Starke-DMS®"
-$TaskAusloeser = New-ScheduledTaskTrigger -AtLogon
-$TaskAktion = New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\install\Install-Starke-DMS_00.ps1 -customerno '$customerno'"
-$TaskEinstellungen = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
-$TaskBenutzer = New-ScheduledTaskPrincipal -UserId "SYSTEM" -RunLevel Highest            
+$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+
+$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_31_dummy.ps1 -customerno $customerno -p1 $p1 -p2 $p2"
+#$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument --% "-command "& 'C:\install\Install-Starke-DMS_31_dummy.ps1' -customerno '56999' -p1 'Starke' -p2 'DMS' ""
+#$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell -Command ""&"'C:\install\Install-Starke-DMS_31_dummy.ps1' -customerno '56999' -p1 'Starke' -p2 'DMS'""
+#$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "cmd"
+
+$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
-Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAktion -Trigger $TaskAusloeser -Principal $TaskBenutzer -Settings $TaskEinstellungen -Description $TaskDescription
+Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
