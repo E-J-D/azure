@@ -641,13 +641,6 @@ Add-LocalGroupMember -Group Administratoren -Member "MartinLange"
 
 
 ################################################
-## stop the transcript
-################################################
-stop-transcript
-Clear-Host []
-
-
-################################################
 ## install updates
 ################################################
 
@@ -676,6 +669,8 @@ if($UPDATE -eq "yes"){
 ################################################
 ## change admin name und password
 ################################################
+PrintJobToDo "change Admin to GottliebKrause"
+
 if($ADMINUPDATE -eq "yes"){
 	$newadminpass = Scramble-String $password
 	$NewAdminPassword = convertto-securestring $newadminpass -asplaintext -force
@@ -715,6 +710,7 @@ if($ADMINUPDATE -eq "yes"){
 	'-------------------------------------------------------------------'  | `
 	out-file $env:USERPROFILE\Desktop\admin_password_username.txt
 
+	PrintJobDone "Admin changed to GottliebKrause"
 
 }else {
 	PrintJobError "NO admin name and password change"
@@ -725,13 +721,14 @@ if($ADMINUPDATE -eq "yes"){
 ## enable Adminstrator auto logon
 ################################################
  
+PrintJobToDo "enable autologon GottliebKrause"
 $UserAutoLogon = 'GottliebKrause'
 $PassAutoLogon2 = $newadminpass
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
 Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon2" -type String
-
+PrintJobDone "Autologon GottliebKrause enabled"
 
 ########################################################################
 ## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
@@ -780,3 +777,10 @@ if($ADMINUPDATE -eq "yes"){
 }elseif($SSH -eq "yes"){
 	Notepad $env:USERPROFILE\Desktop\ssh_password_username.txt 
 }
+
+
+################################################
+## stop the transcript
+################################################
+stop-transcript
+Clear-Host []
