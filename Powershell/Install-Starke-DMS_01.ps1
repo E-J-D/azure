@@ -667,57 +667,6 @@ if($UPDATE -eq "yes"){
 
 
 ################################################
-## change admin name und password
-################################################
-PrintJobToDo "change Admin to GottliebKrause"
-
-if($ADMINUPDATE -eq "yes"){
-	$newadminpass = Scramble-String $password
-	$NewAdminPassword = convertto-securestring $newadminpass -asplaintext -force
-	Set-LocalUser -Name Administrator -Password $NewAdminPassword –Verbose
-
-	Rename-LocalUser -Name "Administrator"  -NewName "GottliebKrause"
-	wmic useraccount where "Name='GottliebKrause'" set PasswordExpires=false
-
-	'-------------------------------------------------------------------', `
-	'  ____  _             _              ____  __  __ ____             ', `
-	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
-	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
-	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
-	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
-	'   ____ _                 _   ___           _        _ _           ', `
-	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
-	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
-	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
-	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
-	'                                                                   ', `
-	'-------------------------------------------------------------------', `
-	'New Administrator name and password', `
-	'-------------------------------------------------------------------', `
-	'Host: '+$ENV:COMPUTERNAME, `
-	'-------------------------------------------------------------------', `
-	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
-	'-------------------------------------------------------------------', `
-	'new admin user:', `
-	'"GottliebKrause"', `
-	'-------------------------------------------------------------------', `
-	'new password:', `
-	$newadminpass, `
-	'-------------------------------------------------------------------', `
-	'-------------------------------------------------------------------', `
-	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
-	'-------------------------------------------------------------------', `
-	'-------------------------------------------------------------------'  | `
-	out-file $env:USERPROFILE\Desktop\admin_password_username.txt
-
-	PrintJobDone "Admin changed to GottliebKrause"
-
-}else {
-	PrintJobError "NO admin name and password change"
-	Start-Sleep -s 5
-}
-
-################################################
 ## enable Adminstrator auto logon
 ################################################
  
@@ -742,7 +691,7 @@ PrintJobDone "Autologon GottliebKrause enabled"
 	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
 	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-command C:\install\Install-Starke-DMS_02.ps1"
 	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
-	$TaskUser = New-ScheduledTaskPrincipal -UserId "GottliebKrause" -RunLevel Highest
+	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
 	Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
 
@@ -751,36 +700,22 @@ PrintJobDone "Autologon GottliebKrause enabled"
 
  
 ################################################
-## restart the computer
-################################################
-# [Console]::ReadKey()
-# Restart-computer -force
-
-
-################################################
 ## we're done
 ################################################
 
 PrintJobDone "Install-Starke-DMS_01.ps1 finished"
 Start-Sleep -s 5
-PrintJobToDo "Restart the Computer and continue with Install-Starke-DMS_02.ps1"
 
 
 ################################################
-## open the ftp_password_username.txt file
+## restart computer
 ################################################
 
-Notepad $env:USERPROFILE\Desktop\ftp_password_username.txt 
+Clear-Host []
+PrintJobToDo "Computer will be restarted after 30s - press STRG-C to interrupt"
+Start-Sleep -s 30
 
-if($ADMINUPDATE -eq "yes"){
-	Notepad $env:USERPROFILE\Desktop\admin_password_username.txt 
-}elseif($SSH -eq "yes"){
-	Notepad $env:USERPROFILE\Desktop\ssh_password_username.txt 
-}
-
-
-################################################
-## stop the transcript
-################################################
 stop-transcript
 Clear-Host []
+
+Restart-computer -force
