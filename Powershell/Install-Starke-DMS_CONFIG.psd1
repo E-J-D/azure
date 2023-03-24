@@ -11,6 +11,7 @@
 -LIZuid 		# license UID to be downloaded / e.g. -LIZuid '{5C395FDC-6A94-32BE-BAD4-918D9B324AFG}'
 -saPass 		# sa password for the database / e.g. -saPass 'secretsapassword' 
 -FTP            # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
+-FTPbasic       # install the FTP OS requirements
 -SSH            # add with "no" for not installing the SSH feature - mainly for testing / -SSH 'no'
 -UPDATE         # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE    # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
@@ -23,6 +24,14 @@ VERY optional parameter
 #>
 
 @{
+    # project specific values
+    customerno = '{KDNR}'
+    PassAutoLogon = '{INITIALADMINPASSWORD}'
+
+  # example
+  # LIZuid = '{BB2D87B2-812D-4C62-BA23-7944B943B086}'
+    LIZuid = '{{KUNDEN-LIZENZ-ID}}'
+
     #Standard values - ne need to change for standard project
     FTPserver = 'ftp.get--it.de'
     FTPUser = 'AUTOINSTALLER'
@@ -36,12 +45,4 @@ VERY optional parameter
     ADMINUPDATE = 'yes'
     UPDATE = 'no'
     POWERSHELL7 = 'yes'
-    
-    # project specific values
-    customerno = '{KDNR}'
-    PassAutoLogon = '{INITIALADMINPASSWORD}'
-
-  # example
-  # LIZuid = '{BB2D87B2-812D-4C62-BA23-7944B943B086}'
-    LIZuid = '{{KUNDEN-LIZENZ-ID}}'
 }

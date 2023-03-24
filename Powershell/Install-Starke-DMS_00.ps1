@@ -36,6 +36,7 @@ $customerno = $var.customerno
 $LIZuid = $var.LIZuid
 $UPDATE = $var.UPDATE
 $FTP = $var.FTP
+$FTPbasic = $var.FTP
 $SSH = $var.SSH
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
@@ -408,7 +409,7 @@ Web: https://sid-500.com/2020/12/28/windows-10-configure-auto-logon-with-powersh
  #>
  
 $UserAutoLogon = 'Administrator'
-$PassAutoLogon = $PassAutoLogon
+#$PassAutoLogon = $PassAutoLogon
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 

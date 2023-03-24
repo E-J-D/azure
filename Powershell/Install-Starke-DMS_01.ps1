@@ -726,11 +726,11 @@ if($ADMINUPDATE -eq "yes"){
 ################################################
  
 $UserAutoLogon = 'GottliebKrause'
-$PassAutoLogon = $newadminpass
+$PassAutoLogon2 = $newadminpass
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
-Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type String
+Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon2" -type String
 
 
 ########################################################################
