@@ -78,6 +78,14 @@ param (
 Unregister-ScheduledTask -TaskName "run Install-Starke-DMS_01.ps1 at logon" -Confirm:$false
 
 
+#######################################
+## generate timestamp
+#######################################
+
+$t=(get-date -format "yyyy-MM-dd_HH-mm-ss")
+Start-Sleep -s 1
+
+
 ################################################
 ## stop script on PowerShell error 
 ################################################
@@ -164,14 +172,6 @@ Clear-Host []
 PrintJobToDo "Starke-DMS® unattended install part 2 of 3"
 Start-Sleep -s 3
 Clear-Host []
-
-
-#######################################
-## generate timestamp
-#######################################
-
-$t=(get-date -format "yyyy-MM-dd_HH-mm-ss")
-Start-Sleep -s 1
 
 
 #######################################
@@ -721,7 +721,38 @@ if($ADMINUPDATE -eq "yes"){
 	Start-Sleep -s 5
 }
 
+################################################
+## enable Adminstrator auto logon
+################################################
+ 
+$UserAutoLogon = 'GottliebKrause'
+$PassAutoLogon = $newadminpass
+$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
+Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
+Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
+Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type String
 
+
+########################################################################
+## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
+########################################################################
+
+	PrintJobToDo  "create task to continue the installation at next logon"
+
+	[string]$TaskName = "run Install-Starke-DMS_02.ps1 at logon"
+	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
+	[string]$TaskDir = "\Starke-DMS®"
+	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-command C:\install\Install-Starke-DMS_02.ps1"
+	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+	$TaskUser = New-ScheduledTaskPrincipal -UserId "GottliebKrause" -RunLevel Highest
+	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
+	Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
+
+	PrintJobDone "task to continue the installation is created"
+	Start-Sleep -s 3
+
+ 
 ################################################
 ## restart the computer
 ################################################

@@ -20,6 +20,7 @@ $var.customerno
 $var.LIZuid
 $var.UPDATE
 $var.FTP
+$var.SSH
 $var.ADMINUPDATE
 $var.POWERSHELL7 
 $var.PassAutoLogon
@@ -35,6 +36,7 @@ $customerno = $var.customerno
 $LIZuid = $var.LIZuid
 $UPDATE = $var.UPDATE
 $FTP = $var.FTP
+$SSH = $var.SSH
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
 $PassAutoLogon = $var.PassAutoLogon
@@ -392,7 +394,7 @@ if($UPDATE -eq "yes"){
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
 	Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
 
-	PrintJobError "task to continue the installation is created"
+	PrintJobDone "task to continue the installation is created"
 	Start-Sleep -s 3
 
 
@@ -406,7 +408,7 @@ Web: https://sid-500.com/2020/12/28/windows-10-configure-auto-logon-with-powersh
  #>
  
 $UserAutoLogon = 'Administrator'
-$PassAutoLogon = 'Admin00!'
+$PassAutoLogon = $PassAutoLogon
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
