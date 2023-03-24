@@ -68,6 +68,13 @@ param (
 #>
 
 ################################################
+## delete my own task from task scheduler
+################################################
+
+Unregister-ScheduledTask -TaskName "run Install-Starke-DMS_01.ps1 at logon" -Confirm:$false
+
+
+################################################
 ## stop script on PowerShell error 
 ################################################
 
