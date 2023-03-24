@@ -1,16 +1,41 @@
-﻿<# 18.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 =========================================================================================
-
--FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
--FTPuser     # name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
--FTPpass     # password for logging into the FTP server / e.g. -FTPpass 'verysecretpassword'
--customerno  # client customer number which is needed for naming the new server and the database creation / e.g. -customerno '23545'
-
--FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
--UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
--ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 #>
+
+#######################################
+## import parameter
+#######################################
+
+$configfile = 'c:\install\Install-Starke-DMS_CONFIG.psd1'
+$var = Import-PowerShellDataFile -Path $configfile
+$var.FTPserver
+$var.FTPuser
+$var.FTPpass
+$var.LIZuser
+$var.LIZpass
+$var.LIZserver
+$var.saPass
+$var.customerno
+$var.LIZuid
+$var.UPDATE
+$var.FTP
+$var.ADMINUPDATE
+
+$FTPserver = $var.FTPserver
+$FTPuser = $var.FTPuser
+$FTPpass = $var.FTPpass
+$LIZuser = $var.LIZuser
+$LIZpass = $var.LIZpass
+$LIZserver = $var.LIZserver
+$saPass = $var.saPass
+$customerno = $var.customerno
+$LIZuid = $var.LIZuid
+$UPDATE = $var.UPDATE
+$FTP = $var.FTP
+$ADMINUPDATE = $var.ADMINUPDATE
+
+<#
 
 #######################################
 ## command line parameter definition 
@@ -23,6 +48,7 @@ param (
 	[string]$UPDATE = 'yes'
 )
 
+#>
 
 ################################################
 ## stop script on PowerShell error 
@@ -344,6 +370,21 @@ if($UPDATE -eq "yes"){
 	PrintJobError "Windows updates not installed"
 	Start-Sleep -s 5
 }
+
+
+########################################################################
+## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
+########################################################################
+
+[string]$TaskName = "run Install-Starke-DMS_01.ps1 at logon"
+[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
+[string]$TaskDir = "\Starke-DMS®"
+$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_01.ps1"
+$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
+if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
+Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
 
 
 ################################################

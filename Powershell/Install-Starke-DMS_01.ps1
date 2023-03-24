@@ -1,4 +1,4 @@
-﻿<# 18.12.2022 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_01.ps1 installs PowerShell 7 which is needed for following installation
 ==========================================================================================
 
@@ -13,6 +13,40 @@ Install-Starke-DMS_01.ps1 installs PowerShell 7 which is needed for following in
 -UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 #>
+
+#######################################
+## import parameter
+#######################################
+
+$configfile = 'c:\install\Install-Starke-DMS_CONFIG.psd1'
+$var = Import-PowerShellDataFile -Path $configfile
+$var.FTPserver
+$var.FTPuser
+$var.FTPpass
+$var.LIZuser
+$var.LIZpass
+$var.LIZserver
+$var.saPass
+$var.customerno
+$var.LIZuid
+$var.UPDATE
+$var.FTP
+$var.ADMINUPDATE
+
+$FTPserver = $var.FTPserver
+$FTPuser = $var.FTPuser
+$FTPpass = $var.FTPpass
+$LIZuser = $var.LIZuser
+$LIZpass = $var.LIZpass
+$LIZserver = $var.LIZserver
+$saPass = $var.saPass
+$customerno = $var.customerno
+$LIZuid = $var.LIZuid
+$UPDATE = $var.UPDATE
+$FTP = $var.FTP
+$ADMINUPDATE = $var.ADMINUPDATE
+
+<#
 
 #######################################
 ## command line parameter definition 
@@ -31,6 +65,7 @@ param (
 	[string]$ADMINUPDATE = 'yes'
 )
 
+#>
 
 ################################################
 ## stop script on PowerShell error 
