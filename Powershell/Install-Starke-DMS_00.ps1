@@ -22,6 +22,7 @@ $var.UPDATE
 $var.FTP
 $var.ADMINUPDATE
 $var.POWERSHELL7 
+$var.PassAutoLogon
 
 $FTPserver = $var.FTPserver
 $FTPuser = $var.FTPuser
@@ -36,6 +37,7 @@ $UPDATE = $var.UPDATE
 $FTP = $var.FTP
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
+$PassAutoLogon = $var.PassAutoLogon
 
 <#
 
@@ -393,6 +395,23 @@ if($UPDATE -eq "yes"){
 	PrintJobError "task to continue the installation is created"
 	Start-Sleep -s 3
 
+
+################################################
+## enable Adminstrator auto logon
+################################################
+
+<#
+ Author: Patrick Gruenauer | Microsoft MVP on PowerShell
+Web: https://sid-500.com/2020/12/28/windows-10-configure-auto-logon-with-powershell-automation/
+ #>
+ 
+$UserAutoLogon = 'Administrator'
+$PassAutoLogon = 'Admin00!'
+$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
+Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
+Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
+Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type String
+ 
 
 ################################################
 ## restart computer

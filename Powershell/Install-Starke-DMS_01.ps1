@@ -33,6 +33,7 @@ $var.UPDATE
 $var.FTP
 $var.ADMINUPDATE
 $var.POWERSHELL7 
+$var.PassAutoLogon
 
 $FTPserver = $var.FTPserver
 $FTPuser = $var.FTPuser
@@ -47,6 +48,8 @@ $UPDATE = $var.UPDATE
 $FTP = $var.FTP
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
+$PassAutoLogon = $var.PassAutoLogon
+
 <#
 
 #######################################

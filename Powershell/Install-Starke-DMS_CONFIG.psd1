@@ -14,6 +14,7 @@
 -UPDATE         # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE    # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 -POWERSHELL7    # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
+-PassAutoLogon  # initial Admin password - needed to enable autologon during auto installation 
 
 VERY optional parameter
 -LIZcustomerno 	# license custom number to be downloaded / e.g. -LIZcustomerno '23545' => not needed if LIZuid is given
@@ -36,6 +37,7 @@ VERY optional parameter
     
     # project specific values
     customerno = '{KDNR}'
+    PassAutoLogon = '{INITIALADMINPASSWORD}'
 
   # example
   # LIZuid = '{BB2D87B2-812D-4C62-BA23-7944B943B086}'
