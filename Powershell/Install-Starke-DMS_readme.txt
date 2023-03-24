@@ -5,18 +5,13 @@ The files "Install-Starke-DMS*" does the silent install. Change this file if nec
 Use this PowerShell commands to start the installation.
 
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/AutoUpdate.ps1" --output c:\install\AutoUpdate.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_CONFIG.psd1" --output c:\Install-Starke-DMS_CONFIG.psd1 --create-dirs  -H "Cache-Control: no-cache, no-store"
+curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_CONFIG.psd1" --output c:\install\Install-Starke-DMS_CONFIG.psd1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_00.ps1" --output c:\install\Install-Starke-DMS_00.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_01.ps1" --output c:\install\Install-Starke-DMS_01.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_02.ps1" --output c:\install\Install-Starke-DMS_02.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
 Set-Location -Path 'c:\install'
 dir
-
-#####################################
-Eike Test 23.02.2023
-curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/Install-Starke-DMS_31_createTasks.ps1" --output c:\install\Install-Starke-DMS_31_createTasks.ps1 --create-dirs  -H "Cache-Control: no-cache, no-store"
-#####################################
-
+notepad c:\install\Install-Starke-DMS_CONFIG.psd1
 
 
 #####################################

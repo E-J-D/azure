@@ -376,23 +376,28 @@ if($UPDATE -eq "yes"){
 ## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
 ########################################################################
 
-[string]$TaskName = "run Install-Starke-DMS_01.ps1 at logon"
-[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
-[string]$TaskDir = "\Starke-DMS®"
-$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
-$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_01.ps1"
-$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
-$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
-if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
-Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
+	PrintJobToDo  "create task to continue the installation at next logon"
+
+	[string]$TaskName = "run Install-Starke-DMS_01.ps1 at logon"
+	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
+	[string]$TaskDir = "\Starke-DMS®"
+	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_01.ps1"
+	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
+	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
+	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
+	Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskDir -Action $TaskAction -Trigger $TaskTrigger -Principal $TaskUser -Settings $TaskSettings -Description $TaskDescription
+
+	PrintJobError "task to continue the installation is created"
+	Start-Sleep -s 3
 
 
 ################################################
 ## restart computer
 ################################################
 Clear-Host []
-PrintJobToDo "Restart in 60s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
-Start-Sleep -s 60
+PrintJobToDo "Restart in 10s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
+Start-Sleep -s 10
 
 # stop-transcript / Transcript is broken if OS update installs PowerShell engine update - because of this the transcript stops before updating
 Clear-Host []
