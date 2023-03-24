@@ -13,6 +13,7 @@
 -FTP            # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
 -UPDATE         # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE    # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
+-POWERSHELL7    # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
 
 VERY optional parameter
 -LIZcustomerno 	# license custom number to be downloaded / e.g. -LIZcustomerno '23545' => not needed if LIZuid is given
@@ -31,7 +32,8 @@ VERY optional parameter
     FTP = 'yes'
     ADMINUPDATE = 'yes'
     UPDATE = 'no'
-
+    POWERSHELL7 = 'yes'
+    
     # project specific values
     customerno = '{KDNR}'
 

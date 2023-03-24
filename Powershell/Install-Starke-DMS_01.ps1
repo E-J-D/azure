@@ -32,6 +32,7 @@ $var.LIZuid
 $var.UPDATE
 $var.FTP
 $var.ADMINUPDATE
+$var.POWERSHELL7 
 
 $FTPserver = $var.FTPserver
 $FTPuser = $var.FTPuser
@@ -44,8 +45,8 @@ $customerno = $var.customerno
 $LIZuid = $var.LIZuid
 $UPDATE = $var.UPDATE
 $FTP = $var.FTP
+$POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
-
 <#
 
 #######################################
