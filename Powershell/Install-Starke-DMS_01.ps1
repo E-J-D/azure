@@ -669,7 +669,7 @@ if($UPDATE -eq "yes"){
 ################################################
 ## enable Adminstrator auto logon
 ################################################
- 
+<# 
 PrintJobToDo "enable autologon GottliebKrause"
 $UserAutoLogon = 'GottliebKrause'
 $PassAutoLogon2 = $newadminpass
@@ -678,6 +678,8 @@ Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
 Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon2" -type String
 PrintJobDone "Autologon GottliebKrause enabled"
+#>
+
 
 ########################################################################
 ## create the windows task - run Install-Starke-DMS_01.ps1 at next logon

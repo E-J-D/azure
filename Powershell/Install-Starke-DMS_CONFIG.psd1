@@ -1,5 +1,5 @@
-<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
-============================================================================
+<# 25.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
+=================================================================
 
 -FTPserver 		# specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
 -FTPuser 		# name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
@@ -16,7 +16,7 @@
 -UPDATE         # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
 -ADMINUPDATE    # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 -POWERSHELL7    # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
--PassAutoLogon  # initial Admin password - needed to enable autologon during auto installation 
+-PassAutoLogon  # initial Admin password - needed to enable autologon during auto installation / check terra portal for that
 
 VERY optional parameter
 -LIZcustomerno 	# license custom number to be downloaded / e.g. -LIZcustomerno '23545' => not needed if LIZuid is given
@@ -32,17 +32,18 @@ VERY optional parameter
   # LIZuid = '{BB2D87B2-812D-4C62-BA23-7944B943B086}'
     LIZuid = '{{KUNDEN-LIZENZ-ID}}'
 
-    #Standard values - ne need to change for standard project
-    FTPserver = 'ftp.get--it.de'
-    FTPUser = 'AUTOINSTALLER'
-    FTPpass = 'wbutJzGFALFDrtmN'
-    LIZuser = 'dockersetup'
-    LIZpass = 'S3VzendlaWwgUmV2aXYhbCBiYXdlaXNlbiE'
-    LIZserver = 'https://starke-dms-license.azurewebsites.net'
-    saPass = 'saAdmin00!'
-    FTP = 'yes'
-    SSH = 'no'
-    ADMINUPDATE = 'yes'
-    UPDATE = 'no'
-    POWERSHELL7 = 'yes'
+    #Standard values
+    # IMPORTANT!! copy&paste from "HowTo" document here
+    FTPserver = '*******'
+    FTPUser = '*******'
+    FTPpass = '*******'
+    LIZuser = '*******'
+    LIZpass = '*******'
+    LIZserver = '*******'
+    saPass = '*******'
+    FTP = '*******'
+    SSH = '*******'
+    ADMINUPDATE = '*******'
+    UPDATE = '*******'
+    POWERSHELL7 = '*******'
 }
