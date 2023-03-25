@@ -182,6 +182,15 @@ catch
     }
 }
 
+##################################################
+## disable autostart of Windows server-manager
+##################################################
+
+PrintJobToDo "disable autostart of Windows Server Manager"
+Invoke-Command -ComputerName localhost -ScriptBlock { New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value "0x1" –Force} 
+PrintJobDone "autostart of Windows Server disabled"
+
+
 ################################################
 ## enable Adminstrator auto logon
 ################################################
@@ -237,4 +246,5 @@ catch
     # stop-transcript / Transcript is broken if OS update installs PowerShell engine update - because of this the transcript stops before updating
     Clear-Host []
     Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
+    Start-Sleep -s 3
     Restart-computer -force

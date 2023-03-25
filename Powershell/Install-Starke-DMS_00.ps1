@@ -159,7 +159,7 @@ $ErrorActionPreference = "Stop"
 
 Start-Sleep -s 1
 
-
+<#
 ##################################################
 ## disable autostart of Windows server-manager
 ##################################################
@@ -167,7 +167,7 @@ Start-Sleep -s 1
 PrintJobToDo "disable autostart of Windows Server Manager"
 Invoke-Command -ComputerName localhost -ScriptBlock { New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value "0x1" –Force} 
 PrintJobDone "autostart of Windows Server disabled"
-
+#>
 
 ##################################################
 ## basic explorer settings
@@ -394,11 +394,13 @@ Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type S
 ## send e-mail to technical consultant
 ################################################
 
+PrintJobToDo "send notification e-mail"
 $mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
 $mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
 $mailbody = "Install-Starke-DMS_00.ps1 finished"
 $mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
 Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+PrintJobDone "notification e-mail sent"
 
 
 ################################################
@@ -408,5 +410,6 @@ Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@
 Clear-Host []
 stop-transcript
 Clear-Host []
-
+Start-Sleep -s 3
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 Restart-computer -force

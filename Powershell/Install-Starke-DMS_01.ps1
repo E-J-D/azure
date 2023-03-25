@@ -694,11 +694,13 @@ Start-Sleep -s 5
 ## send e-mail to technical consultant
 ################################################
 
+PrintJobToDo "send notification e-mail"
 $mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
 $mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
 $mailbody = "Install-Starke-DMS_01.ps1 finished"
 $mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_01.ps1 finished"
 Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+PrintJobDone "notification e-mail sent"
 
 
 ################################################
@@ -708,5 +710,6 @@ Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@
 Clear-Host []
 stop-transcript
 Clear-Host []
-
+Start-Sleep -s 3
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 Restart-computer -force
