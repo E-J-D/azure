@@ -1,29 +1,14 @@
 ﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
-=========================================================================================
-#>
+========================================================================================= #>
 
 #######################################
 ## import parameter
 #######################################
 
-$configfile = 'c:\install\Install-Starke-DMS_CONFIG.psd1'
-$var = Import-PowerShellDataFile -Path $configfile
-$var.FTPserver
-$var.FTPuser
-$var.FTPpass
-$var.LIZuser
-$var.LIZpass
-$var.LIZserver
-$var.saPass
-$var.customerno
-$var.LIZuid
-$var.UPDATE
-$var.FTP
-$var.SSH
-$var.ADMINUPDATE
-$var.POWERSHELL7 
-$var.PassAutoLogon
+$configpath = 'c:\install\'
+$configfile = 'Install-Starke-DMS_CONFIG.psd1'
+$var = Import-LocalizedData -BaseDirectory $configpath -FileName $configfile
 
 $FTPserver = $var.FTPserver
 $FTPuser = $var.FTPuser
@@ -41,27 +26,15 @@ $SSH = $var.SSH
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
 $PassAutoLogon = $var.PassAutoLogon
-
-<#
-
-#######################################
-## command line parameter definition 
-#######################################
-
-param (
-	[Parameter(Mandatory=$true)][string]$customerno,
-
-	[string]$FTPbasic = 'yes',
-	[string]$UPDATE = 'yes'
-)
-
-#>
+$MAILPASS = $var.MAILPASS
+$ConsultantMailAddress = $var.ConsultantMailAddress
+$Resellerclient = $var.Resellerclient
 
 ################################################
-## stop script on PowerShell error 
+## delete my own task from task scheduler
 ################################################
 
-$ErrorActionPreference = "Stop"
+Unregister-ScheduledTask -TaskName "run Install-Starke-DMS_00.ps1 at logon" -Confirm:$false
 
 
 ################################################
@@ -184,7 +157,6 @@ $ErrorActionPreference = "Stop"
 ################################################
 ################################################
 
-PrintJobToDo "set default OS settings"
 Start-Sleep -s 1
 
 
@@ -192,13 +164,16 @@ Start-Sleep -s 1
 ## disable autostart of Windows server-manager
 ##################################################
 
+PrintJobToDo "disable autostart of Windows Server Manager"
 Invoke-Command -ComputerName localhost -ScriptBlock { New-ItemProperty -Path HKCU:\Software\Microsoft\ServerManager -Name DoNotOpenServerManagerAtLogon -PropertyType DWORD -Value "0x1" –Force} 
+PrintJobDone "autostart of Windows Server disabled"
 
 
 ##################################################
 ## basic explorer settings
 ##################################################
 
+PrintJobToDo "set basic explorer settings"
 # "file extension on"
 Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -value "0"
 
@@ -216,22 +191,27 @@ Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVers
 
 # "expand path"
 Set-ItemProperty -Type DWord -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "NavPaneExpandToCurrentFolder" -value "1"
+PrintJobDone "basic explorer settings done"
 
 
 ##################################################
 ## set language to de-DE
 ##################################################
 
+PrintJobToDo "set OS Language to GER"
 Set-WinUILanguageOverride -Language de-DE
 Set-Culture de-DE
 Set-WinUserLanguageList de-DE -Force
+PrintJobDone "OS language set to GER"
 
 
 ################################################
 ## rename computer to $customerno
 ################################################
 
+PrintJobToDo "rename host"
 Rename-Computer -NewName SDMSC1-$customerno
+PrintJobDone "host renamend"
 
 
 ################################################
@@ -240,6 +220,8 @@ Rename-Computer -NewName SDMSC1-$customerno
 ## must be: second hdd d: and dvd e:
 ## change DVD drive temporaly letter to O:
 ################################################
+
+PrintJobToDo "set default OS settings"
 
 Get-WmiObject -Class Win32_volume -Filter 'DriveType=5' |
   Select-Object -First 1 |
@@ -272,8 +254,7 @@ PrintJobDone "default OS settings done"
 ## when rollout is complete
 ################################################
 
-PrintJobToDo "create rollout Admin user"
-
+	PrintJobToDo "create rollout Admin user"
 	New-LocalUser -Name "EmergencyAdmin" `
 	-FullName "Emergency Admin" `
 	-Description "Starke-DMS Cloud 1.0 Installer Emergency Admin" `
@@ -281,13 +262,13 @@ PrintJobToDo "create rollout Admin user"
 	-PasswordNeverExpires `
 	-AccountNeverExpires 
 	Add-LocalGroupMember -Group "Administratoren" -Member "EmergencyAdmin"
-
-PrintJobDone "rollout admin user created"
+	PrintJobDone "rollout admin user created"
 
 
 ################################################
 ## create media structure
 ################################################
+
 PrintJobToDo "creating media structur"
 
 New-Item -Path "d:\" -Name "dms-data" -ItemType "directory"
@@ -344,7 +325,6 @@ if($FTPbasic -eq "yes"){
 
 if($UPDATE -eq "yes"){
 
-
 	# 25.12.2022 tried to fix "Install-Module -Name PSWindowsUpdate -Force" error
 	# Get-PSRepository
 	# [Net.ServicePoint.Manager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
@@ -379,9 +359,9 @@ if($UPDATE -eq "yes"){
 }
 
 
-########################################################################
-## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
-########################################################################
+#########################################################################
+## create the windows task to run Install-Starke-DMS_01.ps1 at next logon
+#########################################################################
 
 	PrintJobToDo  "create task to continue the installation at next logon"
 
@@ -398,23 +378,28 @@ if($UPDATE -eq "yes"){
 	PrintJobDone "task to continue the installation is created"
 	Start-Sleep -s 3
 
-
+<#
 ################################################
 ## enable Adminstrator auto logon
 ################################################
 
-<#
- Author: Patrick Gruenauer | Microsoft MVP on PowerShell
-Web: https://sid-500.com/2020/12/28/windows-10-configure-auto-logon-with-powershell-automation/
- #>
- 
 $UserAutoLogon = 'Administrator'
-#$PassAutoLogon = $PassAutoLogon
 $RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
 Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
 Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type String
+#>
  
+################################################
+## send e-mail to technical consultant
+################################################
+
+$mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
+$mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
+$mailbody = PrintJobDone "Install-Starke-DMS_00.ps1 finished"
+$mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
+Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+
 
 ################################################
 ## restart computer
@@ -423,7 +408,7 @@ Clear-Host []
 PrintJobToDo "Restart in 10s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
 Start-Sleep -s 10
 
-# stop-transcript / Transcript is broken if OS update installs PowerShell engine update - because of this the transcript stops before updating
+stop-transcript
 Clear-Host []
 
 Restart-computer -force

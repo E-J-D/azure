@@ -1,39 +1,14 @@
 ﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_01.ps1 installs PowerShell 7 which is needed for following installation
-==========================================================================================
-
--FTPserver   # specify the FTP server which will be used for downloading the software / e.g. -FTPserver 'ftp.get--it.de'
--FTPuser     # name the FTP server user for logging into the FTP server / e.g. -FTPuser 'username'
--FTPpass     # password for logging into the FTP server / e.g. -FTPpass 'verysecretpassword'
--customerno  # client customer number which is needed for naming the new server and the database creation / e.g. -customerno '23545'
-
--POWERSHELL7 # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
--FTP         # add with "no" for not installing the FTP feature - mainly for testing / -FTP 'no'
--SSH         # add with "no" for not installing the SSH feature - mainly for testing / -SSH 'no'
--UPDATE      # add with "no" for not installing Windows update - mainly for testing / -UPDATES 'no'
--ADMINUPDATE # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
-#>
+========================================================================================== #>
 
 #######################################
 ## import parameter
 #######################################
 
-$configfile = 'c:\install\Install-Starke-DMS_CONFIG.psd1'
-$var = Import-PowerShellDataFile -Path $configfile
-$var.FTPserver
-$var.FTPuser
-$var.FTPpass
-$var.LIZuser
-$var.LIZpass
-$var.LIZserver
-$var.saPass
-$var.customerno
-$var.LIZuid
-$var.UPDATE
-$var.FTP
-$var.ADMINUPDATE
-$var.POWERSHELL7 
-$var.PassAutoLogon
+$configpath = 'c:\install\'
+$configfile = 'Install-Starke-DMS_CONFIG.psd1'
+$var = Import-LocalizedData -BaseDirectory $configpath -FileName $configfile
 
 $FTPserver = $var.FTPserver
 $FTPuser = $var.FTPuser
@@ -46,30 +21,15 @@ $customerno = $var.customerno
 $LIZuid = $var.LIZuid
 $UPDATE = $var.UPDATE
 $FTP = $var.FTP
+$FTPbasic = $var.FTP
+$SSH = $var.SSH
 $POWERSHELL7 = $var.POWERSHELL7
 $ADMINUPDATE = $var.ADMINUPDATE
 $PassAutoLogon = $var.PassAutoLogon
+$MAILPASS = $var.MAILPASS
+$ConsultantMailAddress = $var.ConsultantMailAddress
+$Resellerclient = $var.Resellerclient
 
-<#
-
-#######################################
-## command line parameter definition 
-#######################################
-
-param (
-	[string]$FTPserver = 'ftp.get--it.de',
-	[Parameter(Mandatory=$true)][string]$FTPuser,
-	[Parameter(Mandatory=$true)][string]$FTPpass,
-	[Parameter(Mandatory=$true)][string]$customerno,
-
-	[string]$POWERSHELL7 = 'yes',
-	[string]$FTP = 'yes',
-	[string]$SSH = 'yes',
-	[string]$UPDATE = 'yes',
-	[string]$ADMINUPDATE = 'yes'
-)
-
-#>
 
 ################################################
 ## delete my own task from task scheduler
@@ -224,12 +184,6 @@ $SSHgroup = "SSHGroup"
 Start-Transcript -Path "c:\install\_Log-Install-Starke-DMS_01-$t.txt" 
 Start-Sleep -s 3
 
-################################################
-## stop script on PowerShell error 
-################################################
-
-$ErrorActionPreference = "Stop"
-
 
 ################################################
 ## Download section
@@ -260,6 +214,7 @@ PrintJobDone "download finished"
 ################################################
 ## install PowerShell 7
 ################################################
+
 if($POWERSHELL7 -eq "yes"){
 	# run the PowerShell7 installer in silent mode
 	PrintJobToDo "installing PowerShell 7"
@@ -347,6 +302,7 @@ PrintJobDone "PS7 module sqlserver installed"
 ################################################
 ## install Notepad++ in silent mode
 ################################################
+
 PrintJobToDo "installing Notepad++"
 Start-Process -Wait -FilePath C:\install\StarkeDMS-latest\$files_NPP -ArgumentList /S -PassThru
 PrintJobDone "Notepad++ installed"
@@ -355,6 +311,7 @@ PrintJobDone "Notepad++ installed"
 ################################################
 ## install Microsoft Edge in silent mode
 ################################################
+
 PrintJobToDo "installing Microsoft Edge"
 Start-Process -wait -FilePath C:\install\StarkeDMS-latest\$files_EDGE -ArgumentList "/quiet"
 PrintJobDone "Microsoft Edge installed"
@@ -622,22 +579,60 @@ if($SSH -eq "yes"){
 }
 
 
-<#
 ################################################
 ## create admin user for reseller
 ################################################
 
-$resellerpassword = Scramble-String $password
-$RESELLERadminPassword = ConvertTo-SecureString $resellerpassword -AsPlainText -Force
-New-LocalUser -Name "MartinLange" `
--FullName "Starke-DMS Cloud 1.0 reseller admin user" `
--Description "Reseller admin user" `
--Password $RESELLERadminPassword `
--PasswordNeverExpires `
--AccountNeverExpires 
+if($Resellerclient -eq "yes"){
+	PrintJobToDo "creating reseller admin account"
+	$resellerpassword = Scramble-String $password
+	$RESELLERadminPassword = ConvertTo-SecureString $resellerpassword -AsPlainText -Force
+	New-LocalUser -Name "MartinLange" `
+	-FullName "Starke-DMS Cloud 1.0 reseller admin account" `
+	-Description "Reseller admin account" `
+	-Password $RESELLERadminPassword `
+	-PasswordNeverExpires `
+	-AccountNeverExpires 
+	Add-LocalGroupMember -Group Administratoren -Member "MartinLange"
 
-Add-LocalGroupMember -Group Administratoren -Member "MartinLange"
-#>
+	'-------------------------------------------------------------------', `
+	'  ____  _             _              ____  __  __ ____             ', `
+	' / ___|| |_ __ _ _ __| | _____      |  _ \|  \/  / ___|            ', `
+	' \___ \| __/ _` | ´__| |/ / _ \_____| | | | |\/| \___ \            ', `
+	'  ___) | || (_| | |  |   <  __/_____| |_| | |  | |___) |           ', `
+	' |____/ \__\__,_|_|  |_|\_\___|     |____/|_|  |_|____/            ', `
+	'   ____ _                 _   ___           _        _ _           ', `
+	'  / ___| | ___  _   _  __| | |_ _|_ __  ___| |_ __ _| | | ___ _ __ ', `
+	' | |   | |/ _ \| | | |/ _` |  | || ´_ \/ __| __/ _` | | |/ _ \ ´__|', `
+	' | |___| | (_) | |_| | (_| |  | || | | \__ \ || (_| | | |  __/ |   ', `
+	'  \____|_|\___/ \__,_|\__,_| |___|_| |_|___/\__\__,_|_|_|\___|_|   ', `
+	'                                                                   ', `
+	'-------------------------------------------------------------------', `
+	'New RESELLER Administrator account', `
+	'-------------------------------------------------------------------', `
+	'Host: '+$ENV:COMPUTERNAME, `
+	'-------------------------------------------------------------------', `
+	'Date: '+(get-date -format "yyyy-MM-dd HH:mm:ss"), `
+	'-------------------------------------------------------------------', `
+	'new RESELLER admin account name:', `
+	'"MartinLange"', `
+	'-------------------------------------------------------------------', `
+	'new password:', `
+	$resellerpassword, `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------', `
+	'DELETE THIS FILE IMMEDIATELY AFTER SAVING THE DATA', `
+	'-------------------------------------------------------------------', `
+	'-------------------------------------------------------------------'  | `
+	out-file $env:USERPROFILE\Desktop\reseller_admin_password_username.txt
+
+
+	PrintJobDone "reseller admin account created"
+
+}else {
+	PrintJobError "reseller admin user NOT created"
+	Start-Sleep -s 3
+}
 
 
 ################################################
@@ -660,25 +655,11 @@ if($UPDATE -eq "yes"){
 	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 	PrintJobDone "all updates installed"
 	Start-Sleep -s 3
+
 }else {
 	PrintJobError "Windows updates not installed"
 	Start-Sleep -s 5
 }
-
-
-################################################
-## enable Adminstrator auto logon
-################################################
-<# 
-PrintJobToDo "enable autologon GottliebKrause"
-$UserAutoLogon = 'GottliebKrause'
-$PassAutoLogon2 = $newadminpass
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
-Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
-Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
-Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon2" -type String
-PrintJobDone "Autologon GottliebKrause enabled"
-#>
 
 
 ########################################################################
@@ -691,7 +672,7 @@ PrintJobDone "Autologon GottliebKrause enabled"
 	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
 	[string]$TaskDir = "\Starke-DMS®"
 	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
-	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-command C:\install\Install-Starke-DMS_02.ps1"
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-file C:\install\Install-Starke-DMS_02.ps1"
 	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
 	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
@@ -710,12 +691,23 @@ Start-Sleep -s 5
 
 
 ################################################
+## send e-mail to technical consultant
+################################################
+
+$mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
+$mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
+$mailbody = PrintJobDone "Install-Starke-DMS_01.ps1 finished"
+$mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_01.ps1 finished"
+Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+
+
+################################################
 ## restart computer
 ################################################
 
 Clear-Host []
-PrintJobToDo "Computer will be restarted after 30s - press STRG-C to interrupt"
-Start-Sleep -s 30
+PrintJobToDo "Computer will be restarted after 5s"
+Start-Sleep -s 5
 
 stop-transcript
 Clear-Host []
