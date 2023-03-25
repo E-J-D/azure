@@ -696,7 +696,7 @@ Start-Sleep -s 5
 
 $mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
 $mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
-$mailbody = PrintJobDone "Install-Starke-DMS_01.ps1 finished"
+$mailbody = "Install-Starke-DMS_01.ps1 finished"
 $mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_01.ps1 finished"
 Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
 
@@ -706,9 +706,6 @@ Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@
 ################################################
 
 Clear-Host []
-PrintJobToDo "Computer will be restarted after 5s"
-Start-Sleep -s 5
-
 stop-transcript
 Clear-Host []
 

@@ -203,7 +203,7 @@ catch
 	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
 	[string]$TaskDir = "\Starke-DMS®"
 	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
-	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_01.ps1"
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_00.ps1"
 	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
 	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            

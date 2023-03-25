@@ -396,7 +396,7 @@ Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type S
 
 $mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
 $mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
-$mailbody = PrintJobDone "Install-Starke-DMS_00.ps1 finished"
+$mailbody = "Install-Starke-DMS_00.ps1 finished"
 $mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
 Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
 
@@ -404,10 +404,8 @@ Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@
 ################################################
 ## restart computer
 ################################################
-Clear-Host []
-PrintJobToDo "Restart in 10s - press STRG-C to interrupt - continue with Install-Starke-DMS_01.ps1"
-Start-Sleep -s 10
 
+Clear-Host []
 stop-transcript
 Clear-Host []
 
