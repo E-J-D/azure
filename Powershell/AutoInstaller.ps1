@@ -237,3 +237,4 @@ catch
     # stop-transcript / Transcript is broken if OS update installs PowerShell engine update - because of this the transcript stops before updating
     Clear-Host []
     Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
+    Restart-computer -force
