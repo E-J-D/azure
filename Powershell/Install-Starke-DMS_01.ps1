@@ -1,4 +1,4 @@
-﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 26.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_01.ps1 installs PowerShell 7 which is needed for following installation
 ========================================================================================== #>
 
@@ -29,6 +29,9 @@ $PassAutoLogon = $var.PassAutoLogon
 $MAILPASS = $var.MAILPASS
 $ConsultantMailAddress = $var.ConsultantMailAddress
 $Resellerclient = $var.Resellerclient
+$DEVRUN = $var.DEVRUN
+
+Clear-Host []
 
 
 ################################################
@@ -201,14 +204,18 @@ $files_SSH		= "OpenSSH-Win64-v9.1.0.0.msi"
 $files = @($files_PS,$files_NPP,$files_EDGE,$files_SSH)
 
 # Perform iteration to download the files to server
-foreach ($i in $files) {
-	curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/"$i"" --ssl-reqd -k --output C:\install\StarkeDMS-latest\$i --create-dirs
+if($DEVRUN -eq "no"){
+	foreach ($i in $files) {
+		curl.exe ftp://""$FTPuser":"$FTPpass"@"$FTPserver"/"$i"" --ssl-reqd -k --output C:\install\StarkeDMS-latest\$i --create-dirs
+	}
+	# download the Ansible config script manually
+	# curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
+
+	PrintJobDone "download finished"
+}else {
+	PrintJobError "DEVRUN - no files downloaded"
+	Start-Sleep -s 3
 }
-
-# download the Ansible config script manually
-# curl.exe "https://raw.githubusercontent.com/E-J-D/sdms-cloud1/main/Powershell/ConfigureRemotingForAnsible.ps1" --output C:\install\ConfigureRemotingForAnsible.ps1 --create-dirs
-
-PrintJobDone "download finished"
 
 
 ################################################
@@ -635,33 +642,6 @@ if($Resellerclient -eq "yes"){
 }
 
 
-################################################
-## install updates
-################################################
-
-if($UPDATE -eq "yes"){
-
-	# Install all pending Updates and restart without asking
-	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
-	Install-Module -Name PSWindowsUpdate -Force
-	Start-Sleep -s 2
-	get-command -module PSWindowsUpdate
-	Start-Sleep -s 2
-	PrintJobDone "PSWindowsUpdate modul for PowerS installed"
-	Start-Sleep -s 2
-	Clear-Host []
-	PrintJobToDo "Install all pending updates"
-	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
-	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
-	PrintJobDone "all updates installed"
-	Start-Sleep -s 3
-
-}else {
-	PrintJobError "Windows updates not installed"
-	Start-Sleep -s 5
-}
-
-
 ########################################################################
 ## create the windows task - run Install-Starke-DMS_01.ps1 at next logon
 ########################################################################
@@ -672,7 +652,7 @@ if($UPDATE -eq "yes"){
 	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
 	[string]$TaskDir = "\Starke-DMS®"
 	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
-	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-file C:\install\Install-Starke-DMS_02.ps1"
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "pwsh" -Argument "-noexit -file C:\install\Install-Starke-DMS_02.ps1"
 	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
 	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
@@ -682,14 +662,6 @@ if($UPDATE -eq "yes"){
 	Start-Sleep -s 3
 
  
-################################################
-## we're done
-################################################
-
-PrintJobDone "Install-Starke-DMS_01.ps1 finished"
-Start-Sleep -s 5
-
-
 ################################################
 ## send e-mail to technical consultant
 ################################################
@@ -704,12 +676,47 @@ PrintJobDone "notification e-mail sent"
 
 
 ################################################
-## restart computer
+## stop transcripting
 ################################################
 
-Clear-Host []
-stop-transcript
+    stop-transcript
+    # stop-transcript / Transcript is broken if OS update installs e.g. PowerShell engine update - because of this the transcript stops before updating
+    Clear-Host []
+
+
+################################################
+## install updates
+################################################
+
+if($UPDATE -eq "yes"){
+	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+	# https://petri.com/how-to-manage-windows-update-using-powershell/
+	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+	Start-Sleep -s 5
+	Install-Module -Name PSWindowsUpdate -Force
+	Start-Sleep -s 3
+	Get-Command -Module PSWindowsUpdate
+	Start-Sleep -s 3
+	PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
+	Start-Sleep -s 2
+	Clear-Host []
+	PrintJobToDo "Install all pending updates"
+	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
+	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
+	PrintJobDone "all updates installed"
+	Start-Sleep -s 3
+
+}else {
+	PrintJobError "Windows updates not installed"
+	Start-Sleep -s 5
+}
+
+
+################################################
+## reboot
+################################################
+
+PrintJobToDo "reboot in 3s"
 Clear-Host []
 Start-Sleep -s 3
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 Restart-computer -force

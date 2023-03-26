@@ -1,4 +1,4 @@
-<# 25.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
+<# 26.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 ================================================================= 
 https://www.starke-dms.cloud
 Config file for Starke-DMS® Cloud 1.0 IaaS installation
@@ -29,6 +29,7 @@ Config file for Starke-DMS® Cloud 1.0 IaaS installation
     UPDATE = '*******'
     POWERSHELL7 = '*******'
     MAILPASS = '*******'
+    DEVRUN = '*******'
 }
 
 <#
@@ -48,6 +49,7 @@ Config file for Starke-DMS® Cloud 1.0 IaaS installation
 -ADMINUPDATE    # add with "no" for not performing admin user name and password change - mainly for testing / -ADMINUPDATE 'no'
 -POWERSHELL7    # add with "no" for not installing Powershell7 - mainly for testing / -POWERSHELL7 'no'
 -PassAutoLogon  # initial Admin password - needed to enable autologon during auto installation / check terra portal for that
+-DEVRUN         # if 'yes' no curl download will start and all source files have to be in place before install
 
 VERY optional parameter
 -LIZcustomerno 	# license custom number to be downloaded / e.g. -LIZcustomerno '23545' => not needed if LIZuid is given

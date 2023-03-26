@@ -1,4 +1,4 @@
-﻿<# 24.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
+﻿<# 26.03.2023 Eike Doose / INTERNAL USER ONLY / do not distribute
 Install-Starke-DMS_00.ps1 basic settings and OS update
 ========================================================================================= #>
 
@@ -29,6 +29,10 @@ $PassAutoLogon = $var.PassAutoLogon
 $MAILPASS = $var.MAILPASS
 $ConsultantMailAddress = $var.ConsultantMailAddress
 $Resellerclient = $var.Resellerclient
+$DEVRUN = $var.DEVRUN
+
+Clear-Host []
+
 
 ################################################
 ## delete my own task from task scheduler
@@ -319,46 +323,6 @@ if($FTPbasic -eq "yes"){
 }
 
 
-################################################
-## install updates
-################################################
-
-if($UPDATE -eq "yes"){
-
-	# 25.12.2022 tried to fix "Install-Module -Name PSWindowsUpdate -Force" error
-	# Get-PSRepository
-	# [Net.ServicePoint.Manager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12
-	# [System.Net.WebRequest]::DefaultWebProxy = [System.Net.WebRequest]::GetSystemWebProxy()
-	# [System.Net.WebRequest]::DefaultWebProxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
-	# 
-	# Install all pending Updates and restart without asking
-	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
-	# https://petri.com/how-to-manage-windows-update-using-powershell/
-	#$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0"
-	#Install-WUUpdates -Updates $Updates
-	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-	Start-Sleep -s 5
-	#egister-PSRepository -Default
-	#tart-Sleep -s 3
-	Install-Module -Name PSWindowsUpdate -Force
-	Start-Sleep -s 3
-	Get-Command -Module PSWindowsUpdate
-	Start-Sleep -s 3
-	PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
-	Start-Sleep -s 2
-	Clear-Host []
-	PrintJobToDo "Install all pending updates"
-	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
-	#Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
-	PrintJobDone "all updates installed"
-	Start-Sleep -s 3
-
-}else {
-	PrintJobError "Windows updates not installed"
-	Start-Sleep -s 5
-}
-
-
 #########################################################################
 ## create the windows task to run Install-Starke-DMS_01.ps1 at next logon
 #########################################################################
@@ -369,7 +333,7 @@ if($UPDATE -eq "yes"){
 	[string]$TaskDescription = "This task will run once at startup / task created by Starke-DMS® cloud installer"
 	[string]$TaskDir = "\Starke-DMS®"
 	$TaskTrigger = New-ScheduledTaskTrigger -AtLogon
-	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-command C:\install\Install-Starke-DMS_01.ps1"
+	$TaskAction = New-ScheduledTaskAction -WorkingDirectory c:\install -Execute "powershell" -Argument "-noexit -command C:\install\Install-Starke-DMS_01.ps1"
 	$TaskSettings = New-ScheduledTaskSettingsSet -DontStopOnIdleEnd -DontStopIfGoingOnBatteries -AllowStartIfOnBatteries
 	$TaskUser = New-ScheduledTaskPrincipal -UserId "Administrator" -RunLevel Highest
 	if (Get-ScheduledTask $TaskName -ErrorAction SilentlyContinue) {Unregister-ScheduledTask $TaskName}            
@@ -378,17 +342,6 @@ if($UPDATE -eq "yes"){
 	PrintJobDone "task to continue the installation is created"
 	Start-Sleep -s 3
 
-<#
-################################################
-## enable Adminstrator auto logon
-################################################
-
-$UserAutoLogon = 'Administrator'
-$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
-Set-ItemProperty $RegistryPath 'AutoAdminLogon' -Value "1" -Type String 
-Set-ItemProperty $RegistryPath 'DefaultUsername' -Value "$UserAutoLogon" -type String 
-Set-ItemProperty $RegistryPath 'DefaultPassword' -Value "$PassAutoLogon" -type String
-#>
  
 ################################################
 ## send e-mail to technical consultant
@@ -400,16 +353,52 @@ $mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke
 $mailbody = "Install-Starke-DMS_00.ps1 finished"
 $mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
 Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+Start-Sleep -s 5
 PrintJobDone "notification e-mail sent"
 
 
 ################################################
-## restart computer
+## stop transcripting
 ################################################
 
-Clear-Host []
-stop-transcript
+    stop-transcript
+    # stop-transcript / Transcript is broken if OS update installs e.g. PowerShell engine update - because of this the transcript stops before updating
+    Clear-Host []
+
+
+################################################
+## install updates
+################################################
+
+if($UPDATE -eq "yes"){
+	PrintJobToDo "Install PSWindowsUpdate modul for PowerShell"
+	# https://petri.com/how-to-manage-windows-update-using-powershell/
+	Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+	Start-Sleep -s 5
+	Install-Module -Name PSWindowsUpdate -Force
+	Start-Sleep -s 3
+	Get-Command -Module PSWindowsUpdate
+	Start-Sleep -s 3
+	PrintJobDone "PSWindowsUpdate modul for PowerShell installed"
+	Start-Sleep -s 2
+	Clear-Host []
+	PrintJobToDo "Install all pending updates"
+	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
+	Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
+	PrintJobDone "all updates installed"
+	Start-Sleep -s 3
+
+}else {
+	PrintJobError "Windows updates not installed"
+	Start-Sleep -s 5
+}
+
+
+################################################
+## reboot
+################################################
+
+PrintJobToDo "reboot in 3s"
 Clear-Host []
 Start-Sleep -s 3
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot
 Restart-computer -force
