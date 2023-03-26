@@ -595,8 +595,8 @@ if($Resellerclient -eq "yes"){
 	$resellerpassword = Scramble-String $password
 	$RESELLERadminPassword = ConvertTo-SecureString $resellerpassword -AsPlainText -Force
 	New-LocalUser -Name "MartinLange" `
-	-FullName "Starke-DMS Cloud 1.0 reseller admin account" `
-	-Description "Reseller admin account" `
+	-FullName "MartinLange" `
+	-Description "Starke-DMS Cloud 1.0 reseller admin account" `
 	-Password $RESELLERadminPassword `
 	-PasswordNeverExpires `
 	-AccountNeverExpires 
