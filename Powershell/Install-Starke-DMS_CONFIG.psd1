@@ -53,5 +53,4 @@ Config file for Starke-DMS® Cloud 1.0 IaaS installation
 
 VERY optional parameter
 -LIZcustomerno 	# license custom number to be downloaded / e.g. -LIZcustomerno '23545' => not needed if LIZuid is given
--LIZtargetdir 	# directory to where the license file will be downloaded / e.g. -LIZtargetdir 'd:\dms-config' 
 #>
