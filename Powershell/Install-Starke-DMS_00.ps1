@@ -347,15 +347,20 @@ if($FTPbasic -eq "yes"){
 ## send e-mail to technical consultant
 ################################################
 
-PrintJobToDo "send notification e-mail"
-$mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
-$mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
-$mailbody = "Install-Starke-DMS_00.ps1 finished"
-$mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
-Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
-Start-Sleep -s 5
-PrintJobDone "notification e-mail sent"
+if($DEVRUN -eq "no"){
+	PrintJobToDo "send notification e-mail"
+	$mailpw = ConvertTo-SecureString -String $MAILPASS -AsPlainText -Force
+	$mailcred = New-Object System.Management.Automation.PSCredential "noreply@starke-dms.cloud", $mailpw
+	$mailbody = "Install-Starke-DMS_00.ps1 finished"
+	$mailsubject = "SDMS-C1-CloudInstaller notification / customer $customerno / Install-Starke-DMS_00.ps1 finished"
+	Send-MailMessage -Credential $mailcred -to $ConsultantMailAddress -from noreply@starke-dms.cloud -SMTPServer 'smtp.strato.com' -Port 587 -usessl -Subject $mailsubject -body $mailbody
+	Start-Sleep -s 5
+	PrintJobDone "notification e-mail sent"
 
+}else {
+	PrintJobError "NO notification e-mail sent"
+	Start-Sleep -s 3
+}
 
 ################################################
 ## stop transcripting
